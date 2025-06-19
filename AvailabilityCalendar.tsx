@@ -6,6 +6,8 @@ export function AvailabilityCalendar() {
   const { state, dispatch } = useApp();
   const { availabilities, users, currentUser } = state;
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [newAvailability, setNewAvailability] = useState({ start: '', end: '' });
 
   const timeSlots = [
     '14:00-17:00',
@@ -31,6 +33,7 @@ export function AvailabilityCalendar() {
 
   const getAvailabilityColor = (available: number, total: number) => {
     const percentage = total > 0 ? available / total : 0;
+    if (percentage === 1) return 'bg-success';
     if (percentage >= 0.8) return 'bg-accent';
     if (percentage >= 0.5) return 'bg-accent/80';
     if (percentage > 0) return 'bg-accent/60';
@@ -70,6 +73,13 @@ export function AvailabilityCalendar() {
     );
   };
 
+  const handleAddAvailability = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('Nouvelle disponibilité', newAvailability);
+    setShowAddModal(false);
+    setNewAvailability({ start: '', end: '' });
+  };
+
   const days = getNext30Days();
 
   return (
@@ -95,19 +105,23 @@ export function AvailabilityCalendar() {
         <h3 className="text-lg font-semibold text-gray-800 mb-4">Légende</h3>
         <div className="flex flex-wrap gap-4">
           <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 bg-accent rounded"></div>
+            <div className="w-4 h-4 bg-success rounded" />
+            <span className="text-sm text-gray-600">100% disponibles</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <div className="w-4 h-4 bg-accent rounded" />
             <span className="text-sm text-gray-600">80%+ disponibles</span>
           </div>
           <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 bg-accent/80 rounded"></div>
+            <div className="w-4 h-4 bg-accent/80 rounded" />
             <span className="text-sm text-gray-600">50-79% disponibles</span>
           </div>
           <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 bg-accent/60 rounded"></div>
+            <div className="w-4 h-4 bg-accent/60 rounded" />
             <span className="text-sm text-gray-600">1-49% disponibles</span>
           </div>
           <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 bg-primary rounded"></div>
+            <div className="w-4 h-4 bg-primary rounded" />
             <span className="text-sm text-gray-600">Aucun disponible</span>
           </div>
         </div>
@@ -251,6 +265,51 @@ export function AvailabilityCalendar() {
           })}
         </div>
       </div>
+
+      {showAddModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl p-6 w-full max-w-md">
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">Ajouter une disponibilité</h2>
+            <form onSubmit={handleAddAvailability} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Heure de début</label>
+                <input
+                  type="time"
+                  value={newAvailability.start}
+                  onChange={(e) => setNewAvailability({ ...newAvailability, start: e.target.value })}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-accent focus:border-transparent"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Heure de fin</label>
+                <input
+                  type="time"
+                  value={newAvailability.end}
+                  onChange={(e) => setNewAvailability({ ...newAvailability, end: e.target.value })}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-accent focus:border-transparent"
+                  required
+                />
+              </div>
+              <div className="flex justify-end space-x-4">
+                <button
+                  type="button"
+                  onClick={() => setShowAddModal(false)}
+                  className="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium"
+                >
+                  Annuler
+                </button>
+                <button
+                  type="submit"
+                  className="bg-primary text-white px-6 py-2 rounded-lg font-medium hover:bg-primary/90 transition-colors focus:outline-none focus:ring-2 focus:ring-accent"
+                >
+                  Enregistrer
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
