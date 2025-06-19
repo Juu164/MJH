@@ -8,6 +8,7 @@ export default {
         primary: '#C62828',
         accent: '#FFA726',
         dark: '#000000',
+        success: '#28A745',
       },
     },
   },
