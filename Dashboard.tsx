@@ -29,7 +29,7 @@ export function Dashboard() {
   return (
     <div className="p-6 max-w-7xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">
+        <h1 className="text-3xl font-bold text-dark mb-2">
           Bonjour {currentUser?.name} ! 👋
         </h1>
         <p className="text-gray-600">
@@ -44,7 +44,7 @@ export function Dashboard() {
             <div className="p-3 bg-primary/10 rounded-lg">
               <Users className="w-6 h-6 text-primary" />
             </div>
-            <span className="text-2xl font-bold text-gray-800">{totalMembers}</span>
+            <span className="text-2xl font-bold text-dark">{totalMembers}</span>
           </div>
           <h3 className="text-sm font-medium text-gray-600">Musiciens actifs</h3>
         </div>
@@ -54,7 +54,7 @@ export function Dashboard() {
             <div className="p-3 bg-accent/20 rounded-lg">
               <Music className="w-6 h-6 text-accent" />
             </div>
-            <span className="text-2xl font-bold text-gray-800">{confirmedConcerts}</span>
+            <span className="text-2xl font-bold text-dark">{confirmedConcerts}</span>
           </div>
           <h3 className="text-sm font-medium text-gray-600">Concerts confirmés</h3>
         </div>
@@ -64,7 +64,7 @@ export function Dashboard() {
             <div className="p-3 bg-accent/20 rounded-lg">
               <TrendingUp className="w-6 h-6 text-accent" />
             </div>
-            <span className="text-2xl font-bold text-gray-800">{getAvailabilityStats()}%</span>
+            <span className="text-2xl font-bold text-dark">{getAvailabilityStats()}%</span>
           </div>
           <h3 className="text-sm font-medium text-gray-600">Disponibilité</h3>
         </div>
@@ -74,7 +74,7 @@ export function Dashboard() {
             <div className="p-3 bg-accent/20 rounded-lg">
               <Calendar className="w-6 h-6 text-accent" />
             </div>
-            <span className="text-2xl font-bold text-gray-800">{upcomingConcerts.length}</span>
+            <span className="text-2xl font-bold text-dark">{upcomingConcerts.length}</span>
           </div>
           <h3 className="text-sm font-medium text-gray-600">Prochains événements</h3>
         </div>
@@ -84,7 +84,7 @@ export function Dashboard() {
         {/* Next Rehearsal */}
         {nextRehearsal && (
           <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
-            <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+            <h3 className="text-xl font-semibold text-dark mb-4 flex items-center">
               <Clock className="w-5 h-5 mr-2 text-primary" />
               Prochaine répétition
             </h3>
@@ -115,7 +115,7 @@ export function Dashboard() {
 
         {/* Upcoming Concerts */}
         <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
-          <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+          <h3 className="text-xl font-semibold text-dark mb-4 flex items-center">
             <Music className="w-5 h-5 mr-2 text-accent" />
             Prochains concerts
           </h3>
@@ -124,7 +124,7 @@ export function Dashboard() {
               upcomingConcerts.map((concert) => (
                 <div key={concert.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
                   <div className="flex items-center justify-between mb-2">
-                    <h4 className="font-semibold text-gray-800">{concert.title}</h4>
+                    <h4 className="font-semibold text-dark">{concert.title}</h4>
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                       concert.status === 'confirmed'
                         ? 'bg-accent/20 text-accent'

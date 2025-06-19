@@ -35,7 +35,7 @@ export function Navigation() {
         <div className="flex items-center space-x-8">
           <div className="flex items-center space-x-2">
             <Music className="w-8 h-8 text-primary" />
-            <span className="text-2xl font-bold text-gray-800 dark:text-gray-100">CalZik</span>
+            <span className="text-2xl font-bold text-dark dark:text-gray-100">CalZik</span>
           </div>
           
           <div className="flex space-x-1">
@@ -61,7 +61,7 @@ export function Navigation() {
 
         <div className="ml-auto flex items-center space-x-4">
           <div className="text-right">
-            <p className="text-sm font-medium text-gray-800 dark:text-gray-100">{currentUser?.name}</p>
+            <p className="text-sm font-medium text-dark dark:text-gray-100">{currentUser?.name}</p>
             <p className="text-xs text-gray-500 dark:text-gray-400">{currentUser?.instrument}</p>
           </div>
           <button
@@ -109,7 +109,7 @@ export function Navigation() {
       <header className="md:hidden bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between dark:bg-gray-800 dark:border-gray-700">
         <div className="flex items-center space-x-2">
           <Music className="w-6 h-6 text-primary" />
-          <span className="text-xl font-bold text-gray-800 dark:text-gray-100">CalZik</span>
+          <span className="text-xl font-bold text-dark dark:text-gray-100">CalZik</span>
         </div>
         <div className="flex items-center space-x-2">
           <button
