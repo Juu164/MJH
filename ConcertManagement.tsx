@@ -120,7 +120,7 @@ export function ConcertManagement() {
     <div className="p-6 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Concerts & Événements</h1>
+          <h1 className="text-3xl font-bold text-dark mb-2">Concerts & Événements</h1>
           <p className="text-gray-600">
             Planifiez et gérez vos concerts, répétitions et auditions
           </p>
@@ -149,7 +149,7 @@ export function ConcertManagement() {
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                  <h3 className="text-lg font-semibold text-dark mb-2">
                     {concert.title}
                   </h3>
                   <div className="flex items-center space-x-2 mb-2">
@@ -213,7 +213,7 @@ export function ConcertManagement() {
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">
+            <h2 className="text-2xl font-bold text-dark mb-6">
               {editingConcert ? 'Modifier l\'événement' : 'Nouvel événement'}
             </h2>
 
@@ -322,7 +322,7 @@ export function ConcertManagement() {
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium"
+                  className="px-4 py-2 text-gray-600 hover:text-dark font-medium"
                 >
                   Annuler
                 </button>

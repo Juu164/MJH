@@ -44,7 +44,7 @@ function AppContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 dark:text-gray-100">
+    <div className="min-h-screen bg-slate-50 dark:bg-gray-900 dark:text-gray-100">
       <Navigation />
       <main className="pb-20 md:pb-0">
         <React.Suspense fallback={<div className="p-4">Chargement...</div>}>

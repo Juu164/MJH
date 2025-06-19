@@ -78,7 +78,7 @@ export function ContactDirectory() {
       salle: 'bg-primary/10 text-primary',
       association: 'bg-accent/20 text-accent',
       festival: 'bg-accent/20 text-accent',
-      autre: 'bg-gray-100 text-gray-800'
+      autre: 'bg-gray-100 text-dark'
     };
 
     const labels = {
@@ -111,7 +111,7 @@ export function ContactDirectory() {
     <div className="p-6 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Annuaire des Contacts</h1>
+          <h1 className="text-3xl font-bold text-dark mb-2">Annuaire des Contacts</h1>
           <p className="text-gray-600">
             Gérez vos contacts : salles, associations, festivals et partenaires
           </p>
@@ -182,7 +182,7 @@ export function ContactDirectory() {
           >
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                <h3 className="text-lg font-semibold text-dark mb-2">
                   {contact.name}
                 </h3>
                 {getTypeBadge(contact.type)}
@@ -259,7 +259,7 @@ export function ContactDirectory() {
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">
+            <h2 className="text-2xl font-bold text-dark mb-6">
               {editingContact ? 'Modifier le contact' : 'Nouveau contact'}
             </h2>
 
@@ -377,7 +377,7 @@ export function ContactDirectory() {
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium"
+                  className="px-4 py-2 text-gray-600 hover:text-dark font-medium"
                 >
                   Annuler
                 </button>

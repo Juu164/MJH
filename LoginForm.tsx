@@ -29,7 +29,7 @@ export function LoginForm() {
           <div className="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-full mb-4">
             <Music className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">CalZik</h1>
+          <h1 className="text-3xl font-bold text-dark mb-2">CalZik</h1>
           <p className="text-gray-600">Connectez-vous à votre espace</p>
         </div>
 

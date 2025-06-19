@@ -92,7 +92,7 @@ export function AdminPanel() {
     <div className="p-6 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Administration</h1>
+          <h1 className="text-3xl font-bold text-dark mb-2">Administration</h1>
           <p className="text-gray-600">
             Gérez les utilisateurs et les paramètres du système
           </p>
@@ -113,7 +113,7 @@ export function AdminPanel() {
             <div className="p-3 bg-primary/10 rounded-lg">
               <Users className="w-6 h-6 text-primary" />
             </div>
-            <span className="text-2xl font-bold text-gray-800">{stats.activeUsers}</span>
+            <span className="text-2xl font-bold text-dark">{stats.activeUsers}</span>
           </div>
           <h3 className="text-sm font-medium text-gray-600">Utilisateurs actifs</h3>
         </div>
@@ -123,7 +123,7 @@ export function AdminPanel() {
             <div className="p-3 bg-accent/20 rounded-lg">
               <ShieldCheck className="w-6 h-6 text-accent" />
             </div>
-            <span className="text-2xl font-bold text-gray-800">{stats.adminUsers}</span>
+            <span className="text-2xl font-bold text-dark">{stats.adminUsers}</span>
           </div>
           <h3 className="text-sm font-medium text-gray-600">Administrateurs</h3>
         </div>
@@ -133,7 +133,7 @@ export function AdminPanel() {
             <div className="p-3 bg-accent/20 rounded-lg">
               <Music className="w-6 h-6 text-accent" />
             </div>
-            <span className="text-2xl font-bold text-gray-800">{stats.upcomingConcerts}</span>
+            <span className="text-2xl font-bold text-dark">{stats.upcomingConcerts}</span>
           </div>
           <h3 className="text-sm font-medium text-gray-600">Prochains concerts</h3>
         </div>
@@ -143,7 +143,7 @@ export function AdminPanel() {
             <div className="p-3 bg-accent/20 rounded-lg">
               <Toggle className="w-6 h-6 text-accent" />
             </div>
-            <span className="text-2xl font-bold text-gray-800">{contacts.length}</span>
+            <span className="text-2xl font-bold text-dark">{contacts.length}</span>
           </div>
           <h3 className="text-sm font-medium text-gray-600">Contacts</h3>
         </div>
@@ -152,7 +152,7 @@ export function AdminPanel() {
       {/* Users Management */}
       <div className="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
         <div className="p-6 border-b border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-800 flex items-center">
+          <h2 className="text-xl font-semibold text-dark flex items-center">
             <Users className="w-6 h-6 mr-2 text-primary" />
             Gestion des utilisateurs
           </h2>
@@ -214,7 +214,7 @@ export function AdminPanel() {
                       className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors ${
                         user.role === 'admin'
                           ? 'bg-accent/20 text-accent hover:bg-accent/30'
-                          : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                          : 'bg-gray-100 text-dark hover:bg-gray-200'
                       }`}
                     >
                       {user.role === 'admin' ? (
@@ -260,7 +260,7 @@ export function AdminPanel() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-gray-800">
+              <h2 className="text-2xl font-bold text-dark">
                 {editingUser ? 'Modifier l\'utilisateur' : 'Nouvel utilisateur'}
               </h2>
               <button
@@ -348,7 +348,7 @@ export function AdminPanel() {
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium"
+                  className="px-4 py-2 text-gray-600 hover:text-dark font-medium"
                 >
                   Annuler
                 </button>
