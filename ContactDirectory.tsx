@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Search, Mail, Phone, MapPin, Edit, Trash2, Filter } from 'lucide-react';
+import { Plus, Search, Mail, Phone, MapPin, Edit, Trash2 } from 'lucide-react';
 import { useApp } from './AppContext';
 import { Contact } from '../types';
 

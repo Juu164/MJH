@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Music, Calendar, MapPin, Edit, Trash2, Eye } from 'lucide-react';
+import { Plus, Calendar, MapPin, Edit, Trash2, Eye } from 'lucide-react';
 import { useApp } from './AppContext';
 import { Concert } from '../types';
 
