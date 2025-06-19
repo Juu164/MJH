@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Calendar, Check, X, Plus, Users } from 'lucide-react';
-import { useApp } from '../context/AppContext';
+import { useApp } from './AppContext';
 
 export function AvailabilityCalendar() {
   const { state, dispatch } = useApp();
@@ -33,10 +33,10 @@ export function AvailabilityCalendar() {
 
   const getAvailabilityColor = (available: number, total: number) => {
     const percentage = total > 0 ? available / total : 0;
-    if (percentage >= 0.8) return 'bg-green-500';
-    if (percentage >= 0.5) return 'bg-yellow-500';
-    if (percentage > 0) return 'bg-orange-500';
-    return 'bg-red-500';
+    if (percentage >= 0.8) return 'bg-accent';
+    if (percentage >= 0.5) return 'bg-accent/80';
+    if (percentage > 0) return 'bg-accent/60';
+    return 'bg-primary';
   };
 
   const handleToggleAvailability = (date: string, timeSlot: string) => {
@@ -85,7 +85,7 @@ export function AvailabilityCalendar() {
         </div>
         <button
           onClick={() => setShowAddModal(true)}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center space-x-2"
+          className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary/90 transition-colors flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-accent"
         >
           <Plus className="w-5 h-5" />
           <span>Ajouter disponibilité</span>
@@ -97,19 +97,19 @@ export function AvailabilityCalendar() {
         <h3 className="text-lg font-semibold text-gray-800 mb-4">Légende</h3>
         <div className="flex flex-wrap gap-4">
           <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 bg-green-500 rounded"></div>
+            <div className="w-4 h-4 bg-accent rounded"></div>
             <span className="text-sm text-gray-600">80%+ disponibles</span>
           </div>
           <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 bg-yellow-500 rounded"></div>
+            <div className="w-4 h-4 bg-accent/80 rounded"></div>
             <span className="text-sm text-gray-600">50-79% disponibles</span>
           </div>
           <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 bg-orange-500 rounded"></div>
+            <div className="w-4 h-4 bg-accent/60 rounded"></div>
             <span className="text-sm text-gray-600">1-49% disponibles</span>
           </div>
           <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 bg-red-500 rounded"></div>
+            <div className="w-4 h-4 bg-primary rounded"></div>
             <span className="text-sm text-gray-600">Aucun disponible</span>
           </div>
         </div>
@@ -135,7 +135,7 @@ export function AvailabilityCalendar() {
                 const isToday = date === new Date().toISOString().split('T')[0];
                 
                 return (
-                  <tr key={date} className={isToday ? 'bg-blue-50' : ''}>
+                  <tr key={date} className={isToday ? 'bg-primary/5' : ''}>
                     <td className="px-4 py-3">
                       <div className="text-sm font-medium text-gray-800">
                         {dateObj.toLocaleDateString('fr-FR', { 
@@ -145,7 +145,7 @@ export function AvailabilityCalendar() {
                         })}
                       </div>
                       {isToday && (
-                        <div className="text-xs text-blue-600 font-medium">
+                        <div className="text-xs text-primary font-medium">
                           Aujourd'hui
                         </div>
                       )}
@@ -191,7 +191,7 @@ export function AvailabilityCalendar() {
       {/* Detailed view for selected date */}
       <div className="mt-8 bg-white rounded-xl p-6 shadow-md border border-gray-100">
         <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-          <Users className="w-5 h-5 mr-2 text-blue-600" />
+          <Users className="w-5 h-5 mr-2 text-primary" />
           Détail des disponibilités
         </h3>
         
@@ -203,7 +203,7 @@ export function AvailabilityCalendar() {
             type="date"
             value={selectedDate}
             onChange={(e) => setSelectedDate(e.target.value)}
-            className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-accent focus:border-transparent"
           />
         </div>
 
@@ -219,13 +219,13 @@ export function AvailabilityCalendar() {
                 
                 <div className="space-y-2">
                   <div>
-                    <p className="text-xs text-green-600 font-medium mb-1">
+                    <p className="text-xs text-accent font-medium mb-1">
                       Disponibles ({availableUsers.length})
                     </p>
                     {availableUsers.map(avail => {
                       const user = users.find(u => u.id === avail.userId);
                       return (
-                        <div key={avail.id} className="text-xs text-green-700 flex items-center">
+                        <div key={avail.id} className="text-xs text-accent flex items-center">
                           <Check className="w-3 h-3 mr-1" />
                           {user?.name} ({user?.instrument})
                         </div>
@@ -234,13 +234,13 @@ export function AvailabilityCalendar() {
                   </div>
                   
                   <div>
-                    <p className="text-xs text-red-600 font-medium mb-1">
+                    <p className="text-xs text-primary font-medium mb-1">
                       Indisponibles ({unavailableUsers.length})
                     </p>
                     {unavailableUsers.map(avail => {
                       const user = users.find(u => u.id === avail.userId);
                       return (
-                        <div key={avail.id} className="text-xs text-red-700 flex items-center">
+                        <div key={avail.id} className="text-xs text-primary flex items-center">
                           <X className="w-3 h-3 mr-1" />
                           {user?.name} ({user?.instrument})
                         </div>

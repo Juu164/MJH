@@ -8,7 +8,7 @@ import {
   LogOut,
   Music
 } from 'lucide-react';
-import { useApp } from '../context/AppContext';
+import { useApp } from './AppContext';
 
 export function Navigation() {
   const { state, dispatch } = useApp();
@@ -32,7 +32,7 @@ export function Navigation() {
       <nav className="hidden md:flex bg-white border-b border-gray-200 px-6 py-4">
         <div className="flex items-center space-x-8">
           <div className="flex items-center space-x-2">
-            <Music className="w-8 h-8 text-blue-600" />
+            <Music className="w-8 h-8 text-primary" />
             <span className="text-2xl font-bold text-gray-800">CalZik</span>
           </div>
           
@@ -43,9 +43,9 @@ export function Navigation() {
                 <button
                   key={tab.id}
                   onClick={() => dispatch({ type: 'SET_TAB', payload: tab.id })}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all ${
+                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all focus:outline-none focus:ring-2 focus:ring-accent ${
                     currentTab === tab.id
-                      ? 'bg-blue-600 text-white shadow-lg'
+                      ? 'bg-primary text-white shadow-lg'
                       : 'text-gray-600 hover:bg-gray-100'
                   }`}
                 >
@@ -64,9 +64,9 @@ export function Navigation() {
           </div>
           <button
             onClick={handleLogout}
-            className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
-            title="Déconnexion"
-          >
+            className="p-2 text-gray-500 hover:text-primary hover:bg-primary/10 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-accent"
+            aria-label="Déconnexion"
+            >
             <LogOut className="w-5 h-5" />
           </button>
         </div>
@@ -81,11 +81,12 @@ export function Navigation() {
               <button
                 key={tab.id}
                 onClick={() => dispatch({ type: 'SET_TAB', payload: tab.id })}
-                className={`flex flex-col items-center space-y-1 p-2 rounded-lg transition-all ${
+                className={`flex flex-col items-center space-y-1 p-2 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-accent ${
                   currentTab === tab.id
-                    ? 'text-blue-600'
+                    ? 'text-primary'
                     : 'text-gray-500'
                 }`}
+                aria-label={tab.label}
               >
                 <Icon className="w-5 h-5" />
                 <span className="text-xs">{tab.label.split(' ')[0]}</span>
@@ -98,12 +99,13 @@ export function Navigation() {
       {/* Mobile Header */}
       <header className="md:hidden bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <Music className="w-6 h-6 text-blue-600" />
+          <Music className="w-6 h-6 text-primary" />
           <span className="text-xl font-bold text-gray-800">CalZik</span>
         </div>
         <button
           onClick={handleLogout}
-          className="p-2 text-gray-500 hover:text-red-600 rounded-lg"
+          className="p-2 text-gray-500 hover:text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-accent"
+          aria-label="Déconnexion"
         >
           <LogOut className="w-5 h-5" />
         </button>
