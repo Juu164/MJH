@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Users, UserPlus, Edit, Trash2, Shield, ShieldCheck, Music, Mail, ToggleLeft as Toggle, Save, X } from 'lucide-react';
-import { useApp } from '../context/AppContext';
+import { useApp } from './AppContext';
 import { User } from '../types';
 
 export function AdminPanel() {
@@ -99,7 +99,7 @@ export function AdminPanel() {
         </div>
         <button
           onClick={() => setShowUserModal(true)}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center space-x-2"
+          className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary/90 transition-colors flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-accent"
         >
           <UserPlus className="w-5 h-5" />
           <span>Nouvel utilisateur</span>
@@ -110,8 +110,8 @@ export function AdminPanel() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
           <div className="flex items-center justify-between mb-4">
-            <div className="p-3 bg-blue-100 rounded-lg">
-              <Users className="w-6 h-6 text-blue-600" />
+            <div className="p-3 bg-primary/10 rounded-lg">
+              <Users className="w-6 h-6 text-primary" />
             </div>
             <span className="text-2xl font-bold text-gray-800">{stats.activeUsers}</span>
           </div>
@@ -120,8 +120,8 @@ export function AdminPanel() {
 
         <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
           <div className="flex items-center justify-between mb-4">
-            <div className="p-3 bg-purple-100 rounded-lg">
-              <ShieldCheck className="w-6 h-6 text-purple-600" />
+            <div className="p-3 bg-accent/20 rounded-lg">
+              <ShieldCheck className="w-6 h-6 text-accent" />
             </div>
             <span className="text-2xl font-bold text-gray-800">{stats.adminUsers}</span>
           </div>
@@ -130,8 +130,8 @@ export function AdminPanel() {
 
         <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
           <div className="flex items-center justify-between mb-4">
-            <div className="p-3 bg-green-100 rounded-lg">
-              <Music className="w-6 h-6 text-green-600" />
+            <div className="p-3 bg-accent/20 rounded-lg">
+              <Music className="w-6 h-6 text-accent" />
             </div>
             <span className="text-2xl font-bold text-gray-800">{stats.upcomingConcerts}</span>
           </div>
@@ -140,8 +140,8 @@ export function AdminPanel() {
 
         <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
           <div className="flex items-center justify-between mb-4">
-            <div className="p-3 bg-orange-100 rounded-lg">
-              <Toggle className="w-6 h-6 text-orange-600" />
+            <div className="p-3 bg-accent/20 rounded-lg">
+              <Toggle className="w-6 h-6 text-accent" />
             </div>
             <span className="text-2xl font-bold text-gray-800">{contacts.length}</span>
           </div>
@@ -153,7 +153,7 @@ export function AdminPanel() {
       <div className="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
         <div className="p-6 border-b border-gray-200">
           <h2 className="text-xl font-semibold text-gray-800 flex items-center">
-            <Users className="w-6 h-6 mr-2 text-blue-600" />
+            <Users className="w-6 h-6 mr-2 text-primary" />
             Gestion des utilisateurs
           </h2>
         </div>
@@ -188,8 +188,8 @@ export function AdminPanel() {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <div className="flex-shrink-0 h-10 w-10">
-                        <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
-                          <Music className="w-5 h-5 text-blue-600" />
+                        <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                          <Music className="w-5 h-5 text-primary" />
                         </div>
                       </div>
                       <div className="ml-4">
@@ -213,7 +213,7 @@ export function AdminPanel() {
                       onClick={() => handleToggleRole(user)}
                       className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors ${
                         user.role === 'admin'
-                          ? 'bg-purple-100 text-purple-800 hover:bg-purple-200'
+                          ? 'bg-accent/20 text-accent hover:bg-accent/30'
                           : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
                       }`}
                     >
@@ -230,8 +230,8 @@ export function AdminPanel() {
                       onClick={() => handleToggleActive(user)}
                       className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors ${
                         user.isActive
-                          ? 'bg-green-100 text-green-800 hover:bg-green-200'
-                          : 'bg-red-100 text-red-800 hover:bg-red-200'
+                          ? 'bg-accent/20 text-accent hover:bg-accent/30'
+                          : 'bg-primary/20 text-primary hover:bg-primary/30'
                       }`}
                     >
                       {user.isActive ? 'Actif' : 'Inactif'}
@@ -241,7 +241,7 @@ export function AdminPanel() {
                     <div className="flex space-x-2">
                       <button
                         onClick={() => handleEdit(user)}
-                        className="text-blue-600 hover:text-blue-900 p-1 hover:bg-blue-50 rounded transition-all"
+                        className="text-primary hover:text-primary/80 p-1 hover:bg-primary/10 rounded transition-all focus:outline-none focus:ring-2 focus:ring-accent"
                         title="Modifier"
                       >
                         <Edit className="w-4 h-4" />
@@ -280,7 +280,7 @@ export function AdminPanel() {
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-accent focus:border-transparent"
                   required
                 />
               </div>
@@ -293,7 +293,7 @@ export function AdminPanel() {
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-accent focus:border-transparent"
                   required
                 />
               </div>
@@ -305,7 +305,7 @@ export function AdminPanel() {
                 <select
                   value={formData.instrument}
                   onChange={(e) => setFormData({ ...formData, instrument: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-accent focus:border-transparent"
                   required
                 >
                   <option value="">Sélectionner un instrument</option>
@@ -324,7 +324,7 @@ export function AdminPanel() {
                 <select
                   value={formData.role}
                   onChange={(e) => setFormData({ ...formData, role: e.target.value as User['role'] })}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-accent focus:border-transparent"
                 >
                   <option value="member">Membre</option>
                   <option value="admin">Administrateur</option>
@@ -337,7 +337,7 @@ export function AdminPanel() {
                   id="isActive"
                   checked={formData.isActive}
                   onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  className="h-4 w-4 text-primary focus:ring-accent border-gray-300 rounded"
                 />
                 <label htmlFor="isActive" className="ml-2 block text-sm text-gray-700">
                   Utilisateur actif
@@ -354,7 +354,7 @@ export function AdminPanel() {
                 </button>
                 <button
                   type="submit"
-                  className="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center space-x-2"
+                  className="bg-primary text-white px-6 py-2 rounded-lg font-medium hover:bg-primary/90 transition-colors flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-accent"
                 >
                   <Save className="w-4 h-4" />
                   <span>{editingUser ? 'Modifier' : 'Créer'}</span>

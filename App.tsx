@@ -1,12 +1,13 @@
 import React from 'react';
-import { AppProvider, useApp } from './context/AppContext';
-import { LoginForm } from './components/LoginForm';
-import { Navigation } from './components/Navigation';
-import { Dashboard } from './components/Dashboard';
-import { AvailabilityCalendar } from './components/AvailabilityCalendar';
-import { ConcertManagement } from './components/ConcertManagement';
-import { ContactDirectory } from './components/ContactDirectory';
-import { AdminPanel } from './components/AdminPanel';
+import { AppProvider, useApp } from './AppContext';
+import { LoginForm } from './LoginForm';
+import { Navigation } from './Navigation';
+import { Dashboard } from './Dashboard';
+import { AvailabilityCalendar } from './AvailabilityCalendar';
+const ConcertManagement = React.lazy(() => import('./ConcertManagement').then(m => ({ default: m.ConcertManagement })));
+const ContactDirectory = React.lazy(() => import('./ContactDirectory').then(m => ({ default: m.ContactDirectory })));
+const AdminPanel = React.lazy(() => import('./AdminPanel').then(m => ({ default: m.AdminPanel })));
+import { BackToTop } from './BackToTop';
 
 function AppContent() {
   const { state } = useApp();
@@ -37,7 +38,10 @@ function AppContent() {
     <div className="min-h-screen bg-gray-50">
       <Navigation />
       <main className="pb-20 md:pb-0">
-        {renderCurrentTab()}
+        <React.Suspense fallback={<div className="p-4">Chargement...</div>}>
+          {renderCurrentTab()}
+        </React.Suspense>
+        <BackToTop />
       </main>
     </div>
   );

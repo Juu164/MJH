@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Plus, Search, Mail, Phone, MapPin, Edit, Trash2, Filter } from 'lucide-react';
-import { useApp } from '../context/AppContext';
+import { useApp } from './AppContext';
 import { Contact } from '../types';
 
 export function ContactDirectory() {
@@ -75,9 +75,9 @@ export function ContactDirectory() {
 
   const getTypeBadge = (type: Contact['type']) => {
     const styles = {
-      salle: 'bg-blue-100 text-blue-800',
-      association: 'bg-green-100 text-green-800',
-      festival: 'bg-purple-100 text-purple-800',
+      salle: 'bg-primary/10 text-primary',
+      association: 'bg-accent/20 text-accent',
+      festival: 'bg-accent/20 text-accent',
       autre: 'bg-gray-100 text-gray-800'
     };
 
@@ -118,7 +118,7 @@ export function ContactDirectory() {
         </div>
         <button
           onClick={() => setShowModal(true)}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center space-x-2"
+          className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary/90 transition-colors flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-accent"
         >
           <Plus className="w-5 h-5" />
           <span>Nouveau contact</span>
@@ -136,7 +136,7 @@ export function ContactDirectory() {
                 placeholder="Rechercher par nom, ville ou email..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent"
               />
             </div>
           </div>
@@ -145,7 +145,7 @@ export function ContactDirectory() {
             <select
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-accent focus:border-transparent"
             >
               <option value="">Tous les types</option>
               {contactTypes.map(type => (
@@ -160,7 +160,7 @@ export function ContactDirectory() {
             <select
               value={cityFilter}
               onChange={(e) => setCityFilter(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-accent focus:border-transparent"
             >
               <option value="">Toutes les villes</option>
               {uniqueCities.map(city => (
@@ -190,14 +190,14 @@ export function ContactDirectory() {
               <div className="flex space-x-1">
                 <button
                   onClick={() => handleEdit(contact)}
-                  className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
+                  className="p-2 text-gray-500 hover:text-primary hover:bg-primary/10 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-accent"
                   title="Modifier"
                 >
                   <Edit className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => handleDelete(contact.id)}
-                  className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+                  className="p-2 text-gray-500 hover:text-primary hover:bg-primary/10 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-accent"
                   title="Supprimer"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -207,10 +207,10 @@ export function ContactDirectory() {
 
             <div className="space-y-3 text-sm text-gray-600">
               <div className="flex items-center">
-                <Mail className="w-4 h-4 mr-2 text-blue-500" />
+                <Mail className="w-4 h-4 mr-2 text-primary" />
                 <a 
                   href={`mailto:${contact.email}`}
-                  className="hover:text-blue-600 transition-colors"
+                  className="hover:text-primary transition-colors"
                 >
                   {contact.email}
                 </a>
@@ -218,10 +218,10 @@ export function ContactDirectory() {
               
               {contact.phone && (
                 <div className="flex items-center">
-                  <Phone className="w-4 h-4 mr-2 text-green-500" />
+                  <Phone className="w-4 h-4 mr-2 text-accent" />
                   <a 
                     href={`tel:${contact.phone}`}
-                    className="hover:text-green-600 transition-colors"
+                    className="hover:text-accent transition-colors"
                   >
                     {contact.phone}
                   </a>
@@ -229,7 +229,7 @@ export function ContactDirectory() {
               )}
               
               <div className="flex items-start">
-                <MapPin className="w-4 h-4 mr-2 mt-0.5 text-red-500" />
+                <MapPin className="w-4 h-4 mr-2 mt-0.5 text-primary" />
                 <div>
                   <p>{contact.address}</p>
                   <p>{contact.postalCode} {contact.city}</p>
@@ -273,7 +273,7 @@ export function ContactDirectory() {
                     type="text"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-accent focus:border-transparent"
                     required
                   />
                 </div>
@@ -285,7 +285,7 @@ export function ContactDirectory() {
                   <select
                     value={formData.type}
                     onChange={(e) => setFormData({ ...formData, type: e.target.value as Contact['type'] })}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-accent focus:border-transparent"
                   >
                     {contactTypes.map(type => (
                       <option key={type.value} value={type.value}>
@@ -303,7 +303,7 @@ export function ContactDirectory() {
                     type="email"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-accent focus:border-transparent"
                     required
                   />
                 </div>
@@ -316,7 +316,7 @@ export function ContactDirectory() {
                     type="tel"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-accent focus:border-transparent"
                   />
                 </div>
 
@@ -328,7 +328,7 @@ export function ContactDirectory() {
                     type="text"
                     value={formData.address}
                     onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-accent focus:border-transparent"
                     required
                   />
                 </div>
@@ -341,7 +341,7 @@ export function ContactDirectory() {
                     type="text"
                     value={formData.postalCode}
                     onChange={(e) => setFormData({ ...formData, postalCode: e.target.value })}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-accent focus:border-transparent"
                     required
                   />
                 </div>
@@ -354,7 +354,7 @@ export function ContactDirectory() {
                     type="text"
                     value={formData.city}
                     onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-accent focus:border-transparent"
                     required
                   />
                 </div>
@@ -368,7 +368,7 @@ export function ContactDirectory() {
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                   rows={3}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-accent focus:border-transparent"
                   placeholder="Notes et informations complémentaires..."
                 />
               </div>
@@ -383,7 +383,7 @@ export function ContactDirectory() {
                 </button>
                 <button
                   type="submit"
-                  className="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                  className="bg-primary text-white px-6 py-2 rounded-lg font-medium hover:bg-primary/90 transition-colors focus:outline-none focus:ring-2 focus:ring-accent"
                 >
                   {editingContact ? 'Modifier' : 'Créer'}
                 </button>
