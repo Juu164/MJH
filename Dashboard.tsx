@@ -1,6 +1,6 @@
 import React from 'react';
 import { Calendar, Music, Users, TrendingUp, Clock, MapPin } from 'lucide-react';
-import { useApp } from '../context/AppContext';
+import { useApp } from './AppContext';
 
 export function Dashboard() {
   const { state } = useApp();
@@ -41,8 +41,8 @@ export function Dashboard() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
           <div className="flex items-center justify-between mb-4">
-            <div className="p-3 bg-blue-100 rounded-lg">
-              <Users className="w-6 h-6 text-blue-600" />
+            <div className="p-3 bg-primary/10 rounded-lg">
+              <Users className="w-6 h-6 text-primary" />
             </div>
             <span className="text-2xl font-bold text-gray-800">{totalMembers}</span>
           </div>
@@ -51,8 +51,8 @@ export function Dashboard() {
 
         <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
           <div className="flex items-center justify-between mb-4">
-            <div className="p-3 bg-green-100 rounded-lg">
-              <Music className="w-6 h-6 text-green-600" />
+            <div className="p-3 bg-accent/20 rounded-lg">
+              <Music className="w-6 h-6 text-accent" />
             </div>
             <span className="text-2xl font-bold text-gray-800">{confirmedConcerts}</span>
           </div>
@@ -61,8 +61,8 @@ export function Dashboard() {
 
         <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
           <div className="flex items-center justify-between mb-4">
-            <div className="p-3 bg-orange-100 rounded-lg">
-              <TrendingUp className="w-6 h-6 text-orange-600" />
+            <div className="p-3 bg-accent/20 rounded-lg">
+              <TrendingUp className="w-6 h-6 text-accent" />
             </div>
             <span className="text-2xl font-bold text-gray-800">{getAvailabilityStats()}%</span>
           </div>
@@ -71,8 +71,8 @@ export function Dashboard() {
 
         <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
           <div className="flex items-center justify-between mb-4">
-            <div className="p-3 bg-purple-100 rounded-lg">
-              <Calendar className="w-6 h-6 text-purple-600" />
+            <div className="p-3 bg-accent/20 rounded-lg">
+              <Calendar className="w-6 h-6 text-accent" />
             </div>
             <span className="text-2xl font-bold text-gray-800">{upcomingConcerts.length}</span>
           </div>
@@ -85,12 +85,12 @@ export function Dashboard() {
         {nextRehearsal && (
           <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
             <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-              <Clock className="w-5 h-5 mr-2 text-blue-600" />
+              <Clock className="w-5 h-5 mr-2 text-primary" />
               Prochaine répétition
             </h3>
-            <div className="bg-blue-50 rounded-lg p-4">
-              <h4 className="font-semibold text-blue-800 mb-2">{nextRehearsal.title}</h4>
-              <div className="space-y-2 text-sm text-blue-700">
+            <div className="bg-primary/5 rounded-lg p-4">
+              <h4 className="font-semibold text-primary mb-2">{nextRehearsal.title}</h4>
+              <div className="space-y-2 text-sm text-primary">
                 <div className="flex items-center">
                   <Calendar className="w-4 h-4 mr-2" />
                   {new Date(nextRehearsal.date).toLocaleDateString('fr-FR', {
@@ -116,7 +116,7 @@ export function Dashboard() {
         {/* Upcoming Concerts */}
         <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
           <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-            <Music className="w-5 h-5 mr-2 text-green-600" />
+            <Music className="w-5 h-5 mr-2 text-accent" />
             Prochains concerts
           </h3>
           <div className="space-y-4">
@@ -126,11 +126,11 @@ export function Dashboard() {
                   <div className="flex items-center justify-between mb-2">
                     <h4 className="font-semibold text-gray-800">{concert.title}</h4>
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      concert.status === 'confirmed' 
-                        ? 'bg-green-100 text-green-800'
+                      concert.status === 'confirmed'
+                        ? 'bg-accent/20 text-accent'
                         : concert.status === 'pending'
-                        ? 'bg-yellow-100 text-yellow-800'
-                        : 'bg-red-100 text-red-800'
+                        ? 'bg-accent/20 text-accent'
+                        : 'bg-primary/20 text-primary'
                     }`}>
                       {concert.status === 'confirmed' ? 'Confirmé' : 
                        concert.status === 'pending' ? 'En attente' : 'Annulé'}

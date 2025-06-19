@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Plus, Music, Calendar, MapPin, Edit, Trash2, Eye } from 'lucide-react';
-import { useApp } from '../context/AppContext';
+import { useApp } from './AppContext';
 import { Concert } from '../types';
 
 export function ConcertManagement() {
@@ -74,9 +74,9 @@ export function ConcertManagement() {
 
   const getStatusBadge = (status: Concert['status']) => {
     const styles = {
-      pending: 'bg-yellow-100 text-yellow-800',
-      confirmed: 'bg-green-100 text-green-800',
-      cancelled: 'bg-red-100 text-red-800'
+      pending: 'bg-accent/20 text-accent',
+      confirmed: 'bg-accent/20 text-accent',
+      cancelled: 'bg-primary/20 text-primary'
     };
     
     const labels = {
@@ -94,9 +94,9 @@ export function ConcertManagement() {
 
   const getTypeBadge = (type: Concert['type']) => {
     const styles = {
-      concert: 'bg-blue-100 text-blue-800',
-      repetition: 'bg-purple-100 text-purple-800',
-      audition: 'bg-orange-100 text-orange-800'
+      concert: 'bg-primary/10 text-primary',
+      repetition: 'bg-accent/20 text-accent',
+      audition: 'bg-accent/20 text-accent'
     };
     
     const labels = {
@@ -127,7 +127,7 @@ export function ConcertManagement() {
         </div>
         <button
           onClick={() => setShowModal(true)}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center space-x-2"
+          className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary/90 transition-colors flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-accent"
         >
           <Plus className="w-5 h-5" />
           <span>Nouvel événement</span>
@@ -160,14 +160,14 @@ export function ConcertManagement() {
                 <div className="flex space-x-1">
                   <button
                     onClick={() => handleEdit(concert)}
-                    className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
+                    className="p-2 text-gray-500 hover:text-primary hover:bg-primary/10 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-accent"
                     title="Modifier"
                   >
                     <Edit className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => handleDelete(concert.id)}
-                    className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+                    className="p-2 text-gray-500 hover:text-primary hover:bg-primary/10 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-accent"
                     title="Supprimer"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -227,7 +227,7 @@ export function ConcertManagement() {
                     type="text"
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-accent focus:border-transparent"
                     required
                   />
                 </div>
@@ -239,7 +239,7 @@ export function ConcertManagement() {
                   <select
                     value={formData.type}
                     onChange={(e) => setFormData({ ...formData, type: e.target.value as Concert['type'] })}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-accent focus:border-transparent"
                   >
                     <option value="concert">Concert</option>
                     <option value="repetition">Répétition</option>
@@ -255,7 +255,7 @@ export function ConcertManagement() {
                     type="date"
                     value={formData.date}
                     onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-accent focus:border-transparent"
                     required
                   />
                 </div>
@@ -268,7 +268,7 @@ export function ConcertManagement() {
                     type="time"
                     value={formData.time}
                     onChange={(e) => setFormData({ ...formData, time: e.target.value })}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-accent focus:border-transparent"
                     required
                   />
                 </div>
@@ -281,7 +281,7 @@ export function ConcertManagement() {
                     type="text"
                     value={formData.venue}
                     onChange={(e) => setFormData({ ...formData, venue: e.target.value })}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-accent focus:border-transparent"
                     required
                   />
                 </div>
@@ -293,7 +293,7 @@ export function ConcertManagement() {
                   <select
                     value={formData.contactId}
                     onChange={(e) => setFormData({ ...formData, contactId: e.target.value })}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-accent focus:border-transparent"
                   >
                     <option value="">Sélectionner un contact</option>
                     {contacts.map(contact => (
@@ -313,7 +313,7 @@ export function ConcertManagement() {
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   rows={3}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-accent focus:border-transparent"
                   placeholder="Description de l'événement..."
                 />
               </div>
@@ -328,7 +328,7 @@ export function ConcertManagement() {
                 </button>
                 <button
                   type="submit"
-                  className="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                  className="bg-primary text-white px-6 py-2 rounded-lg font-medium hover:bg-primary/90 transition-colors focus:outline-none focus:ring-2 focus:ring-accent"
                 >
                   {editingConcert ? 'Modifier' : 'Créer'}
                 </button>
