@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Users, UserPlus, Edit, Trash2, Shield, ShieldCheck, Music, Mail, ToggleLeft as Toggle, Save, X } from 'lucide-react';
+import { Users, UserPlus, Edit, Shield, ShieldCheck, Music, Mail, ToggleLeft as Toggle, Save, X } from 'lucide-react';
 import { useApp } from './AppContext';
 import { User } from '../types';
 

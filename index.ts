@@ -47,4 +47,5 @@ export interface AppState {
   concerts: Concert[];
   contacts: Contact[];
   currentTab: 'dashboard' | 'availability' | 'concerts' | 'contacts' | 'admin';
+  isDarkMode: boolean;
 }

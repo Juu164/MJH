@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { AppProvider, useApp } from './AppContext';
 import { LoginForm } from './LoginForm';
 import { Navigation } from './Navigation';
@@ -11,7 +11,16 @@ import { BackToTop } from './BackToTop';
 
 function AppContent() {
   const { state } = useApp();
-  const { currentUser, currentTab } = state;
+  const { currentUser, currentTab, isDarkMode } = state;
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (isDarkMode) {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+  }, [isDarkMode]);
 
   if (!currentUser) {
     return <LoginForm />;
@@ -35,7 +44,7 @@ function AppContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 dark:text-gray-100">
       <Navigation />
       <main className="pb-20 md:pb-0">
         <React.Suspense fallback={<div className="p-4">Chargement...</div>}>

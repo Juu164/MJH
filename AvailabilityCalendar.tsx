@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
-import { Calendar, Check, X, Plus, Users } from 'lucide-react';
+import { Check, X, Plus, Users } from 'lucide-react';
 import { useApp } from './AppContext';
 
 export function AvailabilityCalendar() {
   const { state, dispatch } = useApp();
   const { availabilities, users, currentUser } = state;
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
-  const [selectedTimeSlot, setSelectedTimeSlot] = useState('19:00-22:00');
-  const [showAddModal, setShowAddModal] = useState(false);
 
   const timeSlots = [
     '14:00-17:00',

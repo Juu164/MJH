@@ -13,7 +13,8 @@ type AppAction =
   | { type: 'ADD_CONTACT'; payload: Contact }
   | { type: 'UPDATE_CONTACT'; payload: Contact }
   | { type: 'DELETE_CONTACT'; payload: string }
-  | { type: 'UPDATE_USER'; payload: User };
+  | { type: 'UPDATE_USER'; payload: User }
+  | { type: 'TOGGLE_DARK_MODE' };
 
 // Mock data
 const mockUsers: User[] = [
@@ -87,7 +88,8 @@ const initialState: AppState = {
   availabilities: mockAvailabilities,
   concerts: mockConcerts,
   contacts: mockContacts,
-  currentTab: 'dashboard'
+  currentTab: 'dashboard',
+  isDarkMode: false
 };
 
 const AppContext = createContext<{
@@ -155,6 +157,11 @@ function appReducer(state: AppState, action: AppAction): AppState {
         users: state.users.map(u =>
           u.id === action.payload.id ? action.payload : u
         )
+      };
+    case 'TOGGLE_DARK_MODE':
+      return {
+        ...state,
+        isDarkMode: !state.isDarkMode
       };
     default:
       return state;
