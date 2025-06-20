@@ -205,113 +205,7 @@ export function AvailabilityCalendar() {
         </div>
       )}
 
-      <div className="bg-white rounded-xl shadow-md border border-gray-100 mb-6">
-        <table className="w-full">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">Date</th>
-              <th className="px-4 py-2 text-sm font-medium text-gray-600">Créneaux</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {days.map(date => (
-              <React.Fragment key={date}>
-                <tr>
-                  <td className="px-4 py-2 text-sm font-medium text-dark">
-                    {new Date(date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })}
-                  </td>
-                  <td className="px-4 py-2">
-                    <button
-                      onClick={() => {
-                        setEditingDate(date);
-                        setDateSlotForm({ start: '', end: '', index: -1 });
-                      }}
-                      className="flex items-center space-x-1 text-primary text-sm"
-                    >
-                      <Plus className="w-4 h-4" />
-                      <span>Ajouter créneau</span>
-                    </button>
-                  </td>
-                </tr>
-                {dateSlots[date]?.map((slot, idx) => {
-                  const slotId = `${slot.start}-${slot.end}`;
-                  const availableCount = users.filter(u => confirmations[date]?.[slotId]?.[u.id]).length;
-                  return (
-                    <React.Fragment key={idx}>
-                      <tr className="bg-gray-50">
-                        <td className="px-4 py-1" />
-                        <td className="px-4 py-1 flex justify-between items-center text-sm">
-                          <span>
-                            {slot.start} – {slot.end}
-                            <span className="ml-2 text-xs text-gray-500">({availableCount}/{users.length} disponibles)</span>
-                          </span>
-                          <span className="flex space-x-1">
-                            <button
-                              onClick={() => {
-                                setEditingDate(date);
-                                setDateSlotForm({ start: slot.start, end: slot.end, index: idx });
-                              }}
-                              className="p-1 text-gray-500 hover:text-primary"
-                              title="Modifier"
-                            >
-                              <Edit className="w-4 h-4" />
-                            </button>
-                            <button
-                              onClick={() => {
-                                const updated = (dateSlots[date] || []).filter((_, i) => i !== idx);
-                                setDateSlots({ ...dateSlots, [date]: updated });
-                              }}
-                              className="p-1 text-gray-500 hover:text-primary"
-                              title="Supprimer"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          </span>
-                        </td>
-                      </tr>
-                      <tr className="bg-gray-50">
-                        <td className="px-4 py-1" />
-                        <td className="px-4 py-1">
-                          <MemberAvailabilityRow
-                            members={users}
-                            date={date}
-                            slotId={slotId}
-                            confirmations={confirmations}
-                            setConfirmations={setConfirmations}
-                          />
-                        </td>
-                      </tr>
-                    </React.Fragment>
-                  );
-                })}
-                {editingDate === date && (
-                  <tr className="bg-gray-50">
-                    <td className="px-4 py-2" />
-                    <td className="px-4 py-2">
-                      <div className="flex items-center space-x-2">
-                        <input
-                          type="time"
-                          value={dateSlotForm.start}
-                          onChange={(e) => setDateSlotForm({ ...dateSlotForm, start: e.target.value })}
-                          className="border border-gray-300 rounded px-2 py-1 w-24"
-                        />
-                        <input
-                          type="time"
-                          value={dateSlotForm.end}
-                          onChange={(e) => setDateSlotForm({ ...dateSlotForm, end: e.target.value })}
-                          className="border border-gray-300 rounded px-2 py-1 w-24"
-                        />
-                        <button onClick={handleSaveDateSlot} className="text-primary text-sm">OK</button>
-                        <button onClick={() => setEditingDate(null)} className="text-xs text-gray-500">Annuler</button>
-                      </div>
-                    </td>
-                  </tr>
-                )}
-              </React.Fragment>
-            ))}
-          </tbody>
-        </table>
-      </div>
+
 
       {/* Legend */}
       <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100 mb-6">
@@ -389,54 +283,139 @@ export function AvailabilityCalendar() {
               {days.map(date => {
                 const dateObj = new Date(date);
                 const isToday = date === new Date().toISOString().split('T')[0];
-                
+                const custom = dateSlots[date] || [];
+                const total = users.filter(u => u.isActive).length;
+
                 return (
-                  <tr key={date} id={`avail-${date}`} className={isToday ? 'bg-primary/5' : ''}>
-                    <td className="px-4 py-3">
-                      <div className="text-sm font-medium text-dark">
-                        {dateObj.toLocaleDateString('fr-FR', { 
-                          weekday: 'short',
-                          month: 'short',
-                          day: 'numeric'
-                        })}
-                      </div>
-                      {isToday && (
-                        <div className="text-xs text-primary font-medium">
-                          Aujourd'hui
+                  <React.Fragment key={date}>
+                    <tr id={`avail-${date}`} className={isToday ? 'bg-primary/5' : ''}>
+                      <td className="px-4 py-3">
+                        <div className="text-sm font-medium text-dark">
+                          {dateObj.toLocaleDateString('fr-FR', {
+                            weekday: 'short',
+                            month: 'short',
+                            day: 'numeric'
+                          })}
                         </div>
-                      )}
-                    </td>
-                    {timeSlots.map(slot => {
-                      const slotAvailabilities = getAvailabilityForSlot(date, slot);
-                      const available = slotAvailabilities.filter(a => a.isAvailable).length;
-                      const total = users.filter(u => u.isActive).length;
-                      const userAvailability = getUserAvailability(date, slot);
-                      
+                        {isToday && (
+                          <div className="text-xs text-primary font-medium">Aujourd'hui</div>
+                        )}
+                        <button
+                          onClick={() => {
+                            setEditingDate(date);
+                            setDateSlotForm({ start: '', end: '', index: -1 });
+                          }}
+                          className="mt-1 flex items-center space-x-1 text-primary text-xs"
+                        >
+                          <Plus className="w-4 h-4" />
+                          <span>Créneau perso</span>
+                        </button>
+                      </td>
+                      {timeSlots.map(slot => {
+                        const slotAvailabilities = getAvailabilityForSlot(date, slot);
+                        const available = slotAvailabilities.filter(a => a.isAvailable).length;
+                        const userAvailability = getUserAvailability(date, slot);
+
+                        return (
+                          <td key={slot} className="px-4 py-3 text-center">
+                            <button
+                              onClick={() => handleToggleAvailability(date, slot)}
+                              className="relative group w-full"
+                            >
+                              <div className={`w-12 h-12 mx-auto rounded-lg flex items-center justify-center transition-all ${
+                                getAvailabilityColor(available, total)
+                              } hover:scale-110`}>
+                                {userAvailability?.isAvailable ? (
+                                  <Check className="w-5 h-5 text-white" />
+                                ) : userAvailability?.isAvailable === false ? (
+                                  <X className="w-5 h-5 text-white" />
+                                ) : (
+                                  <Plus className="w-5 h-5 text-white opacity-70" />
+                                )}
+                              </div>
+                              <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                {available}/{total} disponibles
+                              </div>
+                            </button>
+                          </td>
+                        );
+                      })}
+                    </tr>
+                    {custom.map((slot, idx) => {
+                      const slotId = `${slot.start}-${slot.end}`;
+                      const availableCount = users.filter(u => confirmations[date]?.[slotId]?.[u.id]).length;
                       return (
-                        <td key={slot} className="px-4 py-3 text-center">
-                          <button
-                            onClick={() => handleToggleAvailability(date, slot)}
-                            className="relative group w-full"
-                          >
-                            <div className={`w-12 h-12 mx-auto rounded-lg flex items-center justify-center transition-all ${
-                              getAvailabilityColor(available, total)
-                            } hover:scale-110`}>
-                              {userAvailability?.isAvailable ? (
-                                <Check className="w-5 h-5 text-white" />
-                              ) : userAvailability?.isAvailable === false ? (
-                                <X className="w-5 h-5 text-white" />
-                              ) : (
-                                <Plus className="w-5 h-5 text-white opacity-70" />
-                              )}
-                            </div>
-                            <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                              {available}/{total} disponibles
-                            </div>
-                          </button>
-                        </td>
+                        <React.Fragment key={slotId}>
+                          <tr className="bg-gray-50">
+                            <td className="px-4 py-1" />
+                            <td colSpan={timeSlots.length} className="px-4 py-1 flex justify-between items-center text-sm">
+                              <span>
+                                {slot.start} – {slot.end}
+                                <span className="ml-2 text-xs text-gray-500">({availableCount}/{total} disponibles)</span>
+                              </span>
+                              <span className="flex space-x-1">
+                                <button
+                                  onClick={() => {
+                                    setEditingDate(date);
+                                    setDateSlotForm({ start: slot.start, end: slot.end, index: idx });
+                                  }}
+                                  className="p-1 text-gray-500 hover:text-primary"
+                                  title="Modifier"
+                                >
+                                  <Edit className="w-4 h-4" />
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    const updated = (dateSlots[date] || []).filter((_, i) => i !== idx);
+                                    setDateSlots({ ...dateSlots, [date]: updated });
+                                  }}
+                                  className="p-1 text-gray-500 hover:text-primary"
+                                  title="Supprimer"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              </span>
+                            </td>
+                          </tr>
+                          <tr className="bg-gray-50">
+                            <td className="px-4 py-1" />
+                            <td colSpan={timeSlots.length} className="px-4 py-1">
+                              <MemberAvailabilityRow
+                                members={users}
+                                date={date}
+                                slotId={slotId}
+                                confirmations={confirmations}
+                                setConfirmations={setConfirmations}
+                              />
+                            </td>
+                          </tr>
+                        </React.Fragment>
                       );
                     })}
-                  </tr>
+                    {editingDate === date && (
+                      <tr className="bg-gray-50">
+                        <td className="px-4 py-2" />
+                        <td colSpan={timeSlots.length} className="px-4 py-2">
+                          <div className="flex items-center space-x-2">
+                            <input
+                              type="time"
+                              value={dateSlotForm.start}
+                              onChange={e => setDateSlotForm({ ...dateSlotForm, start: e.target.value })}
+                              className="border border-gray-300 rounded px-2 py-1 w-24"
+                            />
+                            <input
+                              type="time"
+                              value={dateSlotForm.end}
+                              onChange={e => setDateSlotForm({ ...dateSlotForm, end: e.target.value })}
+                              className="border border-gray-300 rounded px-2 py-1 w-24"
+                            />
+                            <button onClick={handleSaveDateSlot} className="text-primary text-sm">Enregistrer</button>
+                            <button onClick={() => setEditingDate(null)} className="text-xs text-gray-500">Annuler</button>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
                 );
               })}
             </tbody>
