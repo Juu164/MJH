@@ -1,20 +1,30 @@
 import React, { useState } from 'react';
-import { Check, X, Plus, Users } from 'lucide-react';
+import { Check, X, Plus, Users, Edit, Trash2 } from 'lucide-react';
 import { useApp } from './AppContext';
+import { Availability } from '../types';
 
 export function AvailabilityCalendar() {
   const { state, dispatch } = useApp();
   const { availabilities, users, currentUser } = state;
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [newAvailability, setNewAvailability] = useState({ date: selectedDate, start: '', end: '' });
+  const [selectedDate, setSelectedDate] = useState(
+    new Date().toISOString().split('T')[0]
+  );
+  const [showModal, setShowModal] = useState(false);
+  const [editingAvailability, setEditingAvailability] = useState<Availability | null>(null);
+  const [availabilityForm, setAvailabilityForm] = useState({
+    date: selectedDate,
+    start: '',
+    end: ''
+  });
 
-  const timeSlots = [
+  const [timeSlots, setTimeSlots] = useState<string[]>([
     '14:00-17:00',
     '17:00-20:00',
     '19:00-22:00',
     '20:00-23:00'
-  ];
+  ]);
+  const [editingSlotIndex, setEditingSlotIndex] = useState<number | null>(null);
+  const [slotForm, setSlotForm] = useState({ start: '', end: '' });
 
   const getNext30Days = () => {
     const days = [];
@@ -73,22 +83,34 @@ export function AvailabilityCalendar() {
     );
   };
 
-  const handleAddAvailability = (e: React.FormEvent) => {
+  const handleSaveAvailability = (e: React.FormEvent) => {
     e.preventDefault();
     if (!currentUser) return;
-    const timeSlot = `${newAvailability.start}-${newAvailability.end}`;
-    dispatch({
-      type: 'ADD_AVAILABILITY',
-      payload: {
-        id: Math.random().toString(36).substr(2, 9),
-        userId: currentUser.id,
-        date: newAvailability.date,
-        timeSlot,
-        isAvailable: true,
-      },
-    });
-    setShowAddModal(false);
-    setNewAvailability({ date: selectedDate, start: '', end: '' });
+    const timeSlot = `${availabilityForm.start}-${availabilityForm.end}`;
+    if (editingAvailability) {
+      dispatch({
+        type: 'UPDATE_AVAILABILITY',
+        payload: {
+          ...editingAvailability,
+          date: availabilityForm.date,
+          timeSlot
+        }
+      });
+    } else {
+      dispatch({
+        type: 'ADD_AVAILABILITY',
+        payload: {
+          id: Math.random().toString(36).substr(2, 9),
+          userId: currentUser.id,
+          date: availabilityForm.date,
+          timeSlot,
+          isAvailable: true
+        }
+      });
+    }
+    setShowModal(false);
+    setEditingAvailability(null);
+    setAvailabilityForm({ date: selectedDate, start: '', end: '' });
   };
 
   const days = getNext30Days();
@@ -106,7 +128,11 @@ export function AvailabilityCalendar() {
           </p>
         </div>
         <button
-          onClick={() => setShowAddModal(true)}
+          onClick={() => {
+            setEditingAvailability(null);
+            setAvailabilityForm({ date: selectedDate, start: '', end: '' });
+            setShowModal(true);
+          }}
           className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary/90 transition-colors flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-accent"
         >
           <Plus className="w-5 h-5" />
@@ -117,12 +143,39 @@ export function AvailabilityCalendar() {
       {userSlots.length > 0 && (
         <div className="mb-8 space-y-2">
           {userSlots.map(slot => (
-            <div key={slot.id} className="bg-white border border-gray-200 rounded-lg p-3 shadow-sm">
+            <div
+              key={slot.id}
+              className="bg-white border border-gray-200 rounded-lg p-3 shadow-sm flex justify-between items-center"
+            >
               <span className="text-sm font-medium text-dark">
-                {new Date(slot.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })}
+                {new Date(slot.date).toLocaleDateString('fr-FR', {
+                  day: 'numeric',
+                  month: 'long'
+                })}
                 {' \u2022 '}
                 {slot.timeSlot.replace('-', ' – ')}
               </span>
+              <div className="flex space-x-1">
+                <button
+                  onClick={() => {
+                    setEditingAvailability(slot);
+                    const [start, end] = slot.timeSlot.split('-');
+                    setAvailabilityForm({ date: slot.date, start, end });
+                    setShowModal(true);
+                  }}
+                  className="p-2 text-gray-500 hover:text-primary hover:bg-primary/10 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-accent"
+                  title="Modifier"
+                >
+                  <Edit className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => dispatch({ type: 'DELETE_AVAILABILITY', payload: slot.id })}
+                  className="p-2 text-gray-500 hover:text-primary hover:bg-primary/10 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-accent"
+                  title="Supprimer"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
             </div>
           ))}
         </div>
@@ -162,9 +215,40 @@ export function AvailabilityCalendar() {
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">Date</th>
-                {timeSlots.map(slot => (
-                  <th key={slot} className="px-4 py-3 text-center text-sm font-medium text-gray-600">
-                    {slot}
+                {timeSlots.map((slot, idx) => (
+                  <th key={slot} className="px-4 py-3 text-center text-sm font-medium text-gray-600 relative">
+                    {editingSlotIndex === idx ? (
+                      <div className="absolute left-1/2 -translate-x-1/2 bg-white p-2 rounded-lg shadow-lg space-y-1 z-10">
+                        <input
+                          type="time"
+                          value={slotForm.start}
+                          onChange={(e) => setSlotForm({ ...slotForm, start: e.target.value })}
+                          className="border border-gray-300 rounded w-24 mb-1 px-1"
+                        />
+                        <input
+                          type="time"
+                          value={slotForm.end}
+                          onChange={(e) => setSlotForm({ ...slotForm, end: e.target.value })}
+                          className="border border-gray-300 rounded w-24 mb-1 px-1"
+                        />
+                        <div className="flex justify-end space-x-1 text-xs">
+                          <button onClick={() => { setEditingSlotIndex(null); }} className="text-gray-500">Annuler</button>
+                          <button
+                            onClick={() => {
+                              const updated = [...timeSlots];
+                              updated[idx] = `${slotForm.start}-${slotForm.end}`;
+                              setTimeSlots(updated);
+                              setEditingSlotIndex(null);
+                            }}
+                            className="text-primary"
+                          >OK</button>
+                        </div>
+                      </div>
+                    ) : (
+                      <button onClick={() => { const [s, e] = slot.split('-'); setSlotForm({ start: s, end: e }); setEditingSlotIndex(idx); }} className="hover:text-primary">
+                        {slot.replace('-', ' – ')}
+                      </button>
+                    )}
                   </th>
                 ))}
               </tr>
@@ -294,17 +378,19 @@ export function AvailabilityCalendar() {
         </div>
       </div>
 
-      {showAddModal && (
+      {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl p-6 w-full max-w-md">
-            <h2 className="text-2xl font-bold text-dark mb-6">Ajouter une disponibilité</h2>
-            <form onSubmit={handleAddAvailability} className="space-y-4">
+            <h2 className="text-2xl font-bold text-dark mb-6">
+              {editingAvailability ? 'Modifier la disponibilité' : 'Ajouter une disponibilité'}
+            </h2>
+            <form onSubmit={handleSaveAvailability} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Date</label>
                 <input
                   type="date"
-                  value={newAvailability.date}
-                  onChange={(e) => setNewAvailability({ ...newAvailability, date: e.target.value })}
+                  value={availabilityForm.date}
+                  onChange={(e) => setAvailabilityForm({ ...availabilityForm, date: e.target.value })}
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-accent focus:border-transparent"
                   required
                 />
@@ -313,8 +399,8 @@ export function AvailabilityCalendar() {
                 <label className="block text-sm font-medium text-gray-700 mb-2">Heure de début</label>
                 <input
                   type="time"
-                  value={newAvailability.start}
-                  onChange={(e) => setNewAvailability({ ...newAvailability, start: e.target.value })}
+                  value={availabilityForm.start}
+                  onChange={(e) => setAvailabilityForm({ ...availabilityForm, start: e.target.value })}
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-accent focus:border-transparent"
                   required
                 />
@@ -323,8 +409,8 @@ export function AvailabilityCalendar() {
                 <label className="block text-sm font-medium text-gray-700 mb-2">Heure de fin</label>
                 <input
                   type="time"
-                  value={newAvailability.end}
-                  onChange={(e) => setNewAvailability({ ...newAvailability, end: e.target.value })}
+                  value={availabilityForm.end}
+                  onChange={(e) => setAvailabilityForm({ ...availabilityForm, end: e.target.value })}
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-accent focus:border-transparent"
                   required
                 />
@@ -332,7 +418,10 @@ export function AvailabilityCalendar() {
               <div className="flex justify-end space-x-4">
                 <button
                   type="button"
-                  onClick={() => setShowAddModal(false)}
+                  onClick={() => {
+                    setShowModal(false);
+                    setEditingAvailability(null);
+                  }}
                   className="px-4 py-2 text-gray-600 hover:text-dark font-medium"
                 >
                   Annuler
