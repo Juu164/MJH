@@ -26,6 +26,10 @@ export function AvailabilityCalendar() {
   const [editingSlotIndex, setEditingSlotIndex] = useState<number | null>(null);
   const [slotForm, setSlotForm] = useState({ start: '', end: '' });
 
+  const [dateSlots, setDateSlots] = useState<Record<string, { start: string; end: string }[]>>({});
+  const [editingDate, setEditingDate] = useState<string | null>(null);
+  const [dateSlotForm, setDateSlotForm] = useState<{ start: string; end: string; index: number }>({ start: '', end: '', index: -1 });
+
   const getNext30Days = () => {
     const days = [];
     const today = new Date();
@@ -81,6 +85,23 @@ export function AvailabilityCalendar() {
     return availabilities.find(
       a => a.userId === currentUser.id && a.date === date && a.timeSlot === timeSlot
     );
+  };
+
+  const handleSaveDateSlot = () => {
+    if (!editingDate) return;
+    const slots = dateSlots[editingDate] || [];
+    if (dateSlotForm.index === -1) {
+      setDateSlots({
+        ...dateSlots,
+        [editingDate]: [...slots, { start: dateSlotForm.start, end: dateSlotForm.end }]
+      });
+    } else {
+      const updated = [...slots];
+      updated[dateSlotForm.index] = { start: dateSlotForm.start, end: dateSlotForm.end };
+      setDateSlots({ ...dateSlots, [editingDate]: updated });
+    }
+    setEditingDate(null);
+    setDateSlotForm({ start: '', end: '', index: -1 });
   };
 
   const handleSaveAvailability = (e: React.FormEvent) => {
@@ -180,6 +201,93 @@ export function AvailabilityCalendar() {
           ))}
         </div>
       )}
+
+      <div className="bg-white rounded-xl shadow-md border border-gray-100 mb-6">
+        <table className="w-full">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">Date</th>
+              <th className="px-4 py-2 text-sm font-medium text-gray-600">Créneaux</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200">
+            {days.map(date => (
+              <React.Fragment key={date}>
+                <tr>
+                  <td className="px-4 py-2 text-sm font-medium text-dark">
+                    {new Date(date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })}
+                  </td>
+                  <td className="px-4 py-2">
+                    <button
+                      onClick={() => {
+                        setEditingDate(date);
+                        setDateSlotForm({ start: '', end: '', index: -1 });
+                      }}
+                      className="flex items-center space-x-1 text-primary text-sm"
+                    >
+                      <Plus className="w-4 h-4" />
+                      <span>Ajouter créneau</span>
+                    </button>
+                  </td>
+                </tr>
+                {dateSlots[date]?.map((slot, idx) => (
+                  <tr key={idx} className="bg-gray-50">
+                    <td className="px-4 py-1" />
+                    <td className="px-4 py-1 flex justify-between items-center text-sm">
+                      <span>{slot.start} – {slot.end}</span>
+                      <span className="flex space-x-1">
+                        <button
+                          onClick={() => {
+                            setEditingDate(date);
+                            setDateSlotForm({ start: slot.start, end: slot.end, index: idx });
+                          }}
+                          className="p-1 text-gray-500 hover:text-primary"
+                          title="Modifier"
+                        >
+                          <Edit className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => {
+                            const updated = (dateSlots[date] || []).filter((_, i) => i !== idx);
+                            setDateSlots({ ...dateSlots, [date]: updated });
+                          }}
+                          className="p-1 text-gray-500 hover:text-primary"
+                          title="Supprimer"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+                {editingDate === date && (
+                  <tr className="bg-gray-50">
+                    <td className="px-4 py-2" />
+                    <td className="px-4 py-2">
+                      <div className="flex items-center space-x-2">
+                        <input
+                          type="time"
+                          value={dateSlotForm.start}
+                          onChange={(e) => setDateSlotForm({ ...dateSlotForm, start: e.target.value })}
+                          className="border border-gray-300 rounded px-2 py-1 w-24"
+                        />
+                        <input
+                          type="time"
+                          value={dateSlotForm.end}
+                          onChange={(e) => setDateSlotForm({ ...dateSlotForm, end: e.target.value })}
+                          className="border border-gray-300 rounded px-2 py-1 w-24"
+                        />
+                        <button onClick={handleSaveDateSlot} className="text-primary text-sm">OK</button>
+                        <button onClick={() => setEditingDate(null)} className="text-xs text-gray-500">Annuler</button>
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </React.Fragment>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       {/* Legend */}
       <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100 mb-6">

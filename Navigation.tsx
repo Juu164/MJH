@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Home,
   Calendar,
+  CalendarDays,
   Mic,
   Users,
   Settings,
@@ -19,6 +20,7 @@ export function Navigation() {
   const tabs = [
     { id: 'dashboard' as const, label: 'Tableau de bord', icon: Home },
     { id: 'availability' as const, label: 'Disponibilités', icon: Calendar },
+    { id: 'calendar' as const, label: 'Calendrier', icon: CalendarDays },
     { id: 'concerts' as const, label: 'Concerts', icon: Mic },
     { id: 'contacts' as const, label: 'Contacts', icon: Users },
     ...(currentUser?.role === 'admin' ? [{ id: 'admin' as const, label: 'Administration', icon: Settings }] : []),

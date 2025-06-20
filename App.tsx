@@ -4,6 +4,7 @@ import { LoginForm } from './LoginForm';
 import { Navigation } from './Navigation';
 import { Dashboard } from './Dashboard';
 import { AvailabilityCalendar } from './AvailabilityCalendar';
+const CalendarPage = React.lazy(() => import('./CalendarPage').then(m => ({ default: m.CalendarPage }))); 
 const ConcertManagement = React.lazy(() => import('./ConcertManagement').then(m => ({ default: m.ConcertManagement })));
 const ContactDirectory = React.lazy(() => import('./ContactDirectory').then(m => ({ default: m.ContactDirectory })));
 const AdminPanel = React.lazy(() => import('./AdminPanel').then(m => ({ default: m.AdminPanel })));
@@ -32,6 +33,8 @@ function AppContent() {
         return <Dashboard />;
       case 'availability':
         return <AvailabilityCalendar />;
+      case 'calendar':
+        return <CalendarPage />;
       case 'concerts':
         return <ConcertManagement />;
       case 'contacts':
