@@ -7,6 +7,7 @@ type AppAction =
   | { type: 'SET_TAB'; payload: AppState['currentTab'] }
   | { type: 'ADD_AVAILABILITY'; payload: Availability }
   | { type: 'UPDATE_AVAILABILITY'; payload: Availability }
+  | { type: 'DELETE_AVAILABILITY'; payload: string }
   | { type: 'ADD_CONCERT'; payload: Concert }
   | { type: 'UPDATE_CONCERT'; payload: Concert }
   | { type: 'DELETE_CONCERT'; payload: string }
@@ -116,6 +117,11 @@ function appReducer(state: AppState, action: AppAction): AppState {
         availabilities: state.availabilities.map(a =>
           a.id === action.payload.id ? action.payload : a
         )
+      };
+    case 'DELETE_AVAILABILITY':
+      return {
+        ...state,
+        availabilities: state.availabilities.filter(a => a.id !== action.payload)
       };
     case 'ADD_CONCERT':
       return {
