@@ -1,11 +1,12 @@
 export interface CalendarEvent {
+  id: string;
+  title: string;
   date: string;
   type: 'rehearsal' | 'gig';
-  title: string;
-  location: string;
+  venue: string;
 }
 
 export const events: CalendarEvent[] = [
-  { date: '2024-06-21', type: 'rehearsal', title: 'Répétition générale', location: 'Local de répétition' },
-  { date: '2024-06-28', type: 'gig', title: 'Concert d\'été', location: 'Salle des Fêtes' },
+  { id: '1', title: 'Répétition générale', date: '2024-06-21', type: 'rehearsal', venue: 'Local de répétition' },
+  { id: '2', title: "Concert d'été", date: '2024-06-28', type: 'gig', venue: 'Salle des Fêtes' },
 ];

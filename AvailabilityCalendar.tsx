@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Check, X, Plus, Users, Edit, Trash2 } from 'lucide-react';
 import { useApp } from './AppContext';
 import { Availability } from '../types';
+import { MemberAvailabilityRow, ConfirmationsState } from './MemberAvailabilityRow';
 
 export function AvailabilityCalendar() {
   const { state, dispatch } = useApp();
@@ -29,6 +30,8 @@ export function AvailabilityCalendar() {
   const [dateSlots, setDateSlots] = useState<Record<string, { start: string; end: string }[]>>({});
   const [editingDate, setEditingDate] = useState<string | null>(null);
   const [dateSlotForm, setDateSlotForm] = useState<{ start: string; end: string; index: number }>({ start: '', end: '', index: -1 });
+
+  const [confirmations, setConfirmations] = useState<ConfirmationsState>({});
 
   const getNext30Days = () => {
     const days = [];
@@ -230,36 +233,57 @@ export function AvailabilityCalendar() {
                     </button>
                   </td>
                 </tr>
-                {dateSlots[date]?.map((slot, idx) => (
-                  <tr key={idx} className="bg-gray-50">
-                    <td className="px-4 py-1" />
-                    <td className="px-4 py-1 flex justify-between items-center text-sm">
-                      <span>{slot.start} – {slot.end}</span>
-                      <span className="flex space-x-1">
-                        <button
-                          onClick={() => {
-                            setEditingDate(date);
-                            setDateSlotForm({ start: slot.start, end: slot.end, index: idx });
-                          }}
-                          className="p-1 text-gray-500 hover:text-primary"
-                          title="Modifier"
-                        >
-                          <Edit className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={() => {
-                            const updated = (dateSlots[date] || []).filter((_, i) => i !== idx);
-                            setDateSlots({ ...dateSlots, [date]: updated });
-                          }}
-                          className="p-1 text-gray-500 hover:text-primary"
-                          title="Supprimer"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </span>
-                    </td>
-                  </tr>
-                ))}
+                {dateSlots[date]?.map((slot, idx) => {
+                  const slotId = `${slot.start}-${slot.end}`;
+                  const availableCount = users.filter(u => confirmations[date]?.[slotId]?.[u.id]).length;
+                  return (
+                    <React.Fragment key={idx}>
+                      <tr className="bg-gray-50">
+                        <td className="px-4 py-1" />
+                        <td className="px-4 py-1 flex justify-between items-center text-sm">
+                          <span>
+                            {slot.start} – {slot.end}
+                            <span className="ml-2 text-xs text-gray-500">({availableCount}/{users.length} disponibles)</span>
+                          </span>
+                          <span className="flex space-x-1">
+                            <button
+                              onClick={() => {
+                                setEditingDate(date);
+                                setDateSlotForm({ start: slot.start, end: slot.end, index: idx });
+                              }}
+                              className="p-1 text-gray-500 hover:text-primary"
+                              title="Modifier"
+                            >
+                              <Edit className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => {
+                                const updated = (dateSlots[date] || []).filter((_, i) => i !== idx);
+                                setDateSlots({ ...dateSlots, [date]: updated });
+                              }}
+                              className="p-1 text-gray-500 hover:text-primary"
+                              title="Supprimer"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </span>
+                        </td>
+                      </tr>
+                      <tr className="bg-gray-50">
+                        <td className="px-4 py-1" />
+                        <td className="px-4 py-1">
+                          <MemberAvailabilityRow
+                            members={users}
+                            date={date}
+                            slotId={slotId}
+                            confirmations={confirmations}
+                            setConfirmations={setConfirmations}
+                          />
+                        </td>
+                      </tr>
+                    </React.Fragment>
+                  );
+                })}
                 {editingDate === date && (
                   <tr className="bg-gray-50">
                     <td className="px-4 py-2" />
@@ -367,7 +391,7 @@ export function AvailabilityCalendar() {
                 const isToday = date === new Date().toISOString().split('T')[0];
                 
                 return (
-                  <tr key={date} className={isToday ? 'bg-primary/5' : ''}>
+                  <tr key={date} id={`avail-${date}`} className={isToday ? 'bg-primary/5' : ''}>
                     <td className="px-4 py-3">
                       <div className="text-sm font-medium text-dark">
                         {dateObj.toLocaleDateString('fr-FR', { 
