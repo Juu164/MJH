@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import { EventApi } from '@fullcalendar/core';
-import { events } from './data/events';
+import { useEvents } from './useEvents';
 import { useApp } from './AppContext';
 
 export function CalendarPage() {
   const { dispatch } = useApp();
+  const { events } = useEvents();
   const [selected, setSelected] = useState<EventApi | null>(null);
 
   return (
@@ -22,7 +23,7 @@ export function CalendarPage() {
           date: e.date,
           backgroundColor: e.type === 'rehearsal' ? '#60A5FA' : '#A78BFA',
           borderColor: e.type === 'rehearsal' ? '#60A5FA' : '#A78BFA',
-          extendedProps: { venue: e.venue, type: e.type }
+          extendedProps: { location: e.location, time: e.time, type: e.type }
         }))}
         eventClick={(info) => setSelected(info.event)}
         height="auto"
@@ -31,9 +32,11 @@ export function CalendarPage() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl p-6 w-full max-w-sm">
             <h2 className="text-xl font-bold text-dark mb-2">{selected.title}</h2>
-            <p className="text-sm mb-2">{selected.extendedProps.venue}</p>
+            <p className="text-sm mb-2">
+              {selected.extendedProps.location} - {selected.extendedProps.time}
+            </p>
             <a
-              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selected.extendedProps.venue)}`}
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selected.extendedProps.location)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="text-primary text-sm underline"

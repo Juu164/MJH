@@ -1,38 +1,34 @@
 import React, { useState } from 'react';
-import { Plus, Calendar, MapPin, Edit, Trash2, Eye } from 'lucide-react';
-import { useApp } from './AppContext';
-import { Concert } from '../types';
+import { Plus, Calendar, MapPin, Edit, Trash2 } from 'lucide-react';
+import { useEvents, Event as EventType } from './useEvents';
 
 export function ConcertManagement() {
-  const { state, dispatch } = useApp();
-  const { concerts, contacts, currentUser } = state;
+  const { events, createEvent, updateEvent, deleteEvent } = useEvents();
   const [showModal, setShowModal] = useState(false);
-  const [editingConcert, setEditingConcert] = useState<Concert | null>(null);
+  const [editingEvent, setEditingEvent] = useState<EventType | null>(null);
   const [formData, setFormData] = useState({
     title: '',
     date: '',
     time: '',
-    venue: '',
-    contactId: '',
-    type: 'concert' as Concert['type'],
-    description: ''
+    location: '',
+    type: 'rehearsal' as EventType['type'],
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!currentUser) return;
 
-    const concertData = {
-      ...formData,
-      id: editingConcert?.id || Math.random().toString(36).substr(2, 9),
-      status: 'pending' as const,
-      createdBy: currentUser.id
+    const data = {
+      title: formData.title,
+      date: formData.date,
+      time: formData.time,
+      location: formData.location,
+      type: formData.type,
     };
 
-    if (editingConcert) {
-      dispatch({ type: 'UPDATE_CONCERT', payload: { ...editingConcert, ...concertData } });
+    if (editingEvent) {
+      updateEvent({ ...editingEvent, ...data });
     } else {
-      dispatch({ type: 'ADD_CONCERT', payload: concertData });
+      createEvent(data);
     }
 
     resetForm();
@@ -43,66 +39,41 @@ export function ConcertManagement() {
       title: '',
       date: '',
       time: '',
-      venue: '',
-      contactId: '',
-      type: 'concert',
-      description: ''
+      location: '',
+      type: 'rehearsal',
     });
-    setEditingConcert(null);
+    setEditingEvent(null);
     setShowModal(false);
   };
 
-  const handleEdit = (concert: Concert) => {
-    setEditingConcert(concert);
+  const handleEdit = (ev: EventType) => {
+    setEditingEvent(ev);
     setFormData({
-      title: concert.title,
-      date: concert.date,
-      time: concert.time,
-      venue: concert.venue,
-      contactId: concert.contactId || '',
-      type: concert.type,
-      description: concert.description || ''
+      title: ev.title,
+      date: ev.date,
+      time: ev.time,
+      location: ev.location,
+      type: ev.type,
     });
     setShowModal(true);
   };
 
   const handleDelete = (id: string) => {
     if (confirm('Êtes-vous sûr de vouloir supprimer ce concert ?')) {
-      dispatch({ type: 'DELETE_CONCERT', payload: id });
+      deleteEvent(id);
     }
   };
 
-  const getStatusBadge = (status: Concert['status']) => {
+
+  const getTypeBadge = (type: EventType['type']) => {
     const styles = {
-      pending: 'bg-accent/20 text-accent',
-      confirmed: 'bg-accent/20 text-accent',
-      cancelled: 'bg-primary/20 text-primary'
-    };
-    
-    const labels = {
-      pending: 'En attente',
-      confirmed: 'Confirmé',
-      cancelled: 'Annulé'
+      gig: 'bg-primary/10 text-primary',
+      rehearsal: 'bg-accent/20 text-accent',
     };
 
-    return (
-      <span className={`px-2 py-1 rounded-full text-xs font-medium ${styles[status]}`}>
-        {labels[status]}
-      </span>
-    );
-  };
-
-  const getTypeBadge = (type: Concert['type']) => {
-    const styles = {
-      concert: 'bg-primary/10 text-primary',
-      repetition: 'bg-accent/20 text-accent',
-      audition: 'bg-accent/20 text-accent'
-    };
-    
     const labels = {
-      concert: 'Concert',
-      repetition: 'Répétition',
-      audition: 'Audition'
+      gig: 'Concert',
+      rehearsal: 'Répétition',
     };
 
     return (
@@ -112,7 +83,7 @@ export function ConcertManagement() {
     );
   };
 
-  const sortedConcerts = [...concerts].sort((a, b) => 
+  const sortedEvents = [...events].sort((a, b) =>
     new Date(a.date).getTime() - new Date(b.date).getTime()
   );
 
@@ -134,15 +105,14 @@ export function ConcertManagement() {
         </button>
       </div>
 
-      {/* Concerts List */}
+      {/* Events List */}
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-        {sortedConcerts.map((concert) => {
-          const contact = contacts.find(c => c.id === concert.contactId);
-          const isPast = new Date(concert.date) < new Date();
-          
+        {sortedEvents.map((event) => {
+          const isPast = new Date(event.date) < new Date();
+
           return (
             <div
-              key={concert.id}
+              key={event.id}
               className={`bg-white rounded-xl p-6 shadow-md border border-gray-100 hover:shadow-lg transition-shadow ${
                 isPast ? 'opacity-75' : ''
               }`}
@@ -150,23 +120,22 @@ export function ConcertManagement() {
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold text-dark mb-2">
-                    {concert.title}
+                    {event.title}
                   </h3>
                   <div className="flex items-center space-x-2 mb-2">
-                    {getTypeBadge(concert.type)}
-                    {getStatusBadge(concert.status)}
+                    {getTypeBadge(event.type)}
                   </div>
                 </div>
                 <div className="flex space-x-1">
                   <button
-                    onClick={() => handleEdit(concert)}
+                    onClick={() => handleEdit(event)}
                     className="p-2 text-gray-500 hover:text-primary hover:bg-primary/10 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-accent"
                     title="Modifier"
                   >
                     <Edit className="w-4 h-4" />
                   </button>
                   <button
-                    onClick={() => handleDelete(concert.id)}
+                    onClick={() => handleDelete(event.id)}
                     className="p-2 text-gray-500 hover:text-primary hover:bg-primary/10 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-accent"
                     title="Supprimer"
                   >
@@ -178,31 +147,18 @@ export function ConcertManagement() {
               <div className="space-y-3 text-sm text-gray-600">
                 <div className="flex items-center">
                   <Calendar className="w-4 h-4 mr-2" />
-                  {new Date(concert.date).toLocaleDateString('fr-FR', {
+                  {new Date(event.date).toLocaleDateString('fr-FR', {
                     weekday: 'long',
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric'
-                  })} à {concert.time}
+                  })} à {event.time}
                 </div>
-                
+
                 <div className="flex items-center">
                   <MapPin className="w-4 h-4 mr-2" />
-                  {concert.venue}
+                  {event.location}
                 </div>
-
-                {contact && (
-                  <div className="flex items-center">
-                    <Eye className="w-4 h-4 mr-2" />
-                    {contact.name} - {contact.city}
-                  </div>
-                )}
-
-                {concert.description && (
-                  <p className="text-gray-600 mt-3 text-sm">
-                    {concert.description}
-                  </p>
-                )}
               </div>
             </div>
           );
@@ -214,7 +170,7 @@ export function ConcertManagement() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <h2 className="text-2xl font-bold text-dark mb-6">
-              {editingConcert ? 'Modifier l\'événement' : 'Nouvel événement'}
+              {editingEvent ? 'Modifier l\'événement' : 'Nouvel événement'}
             </h2>
 
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -238,12 +194,11 @@ export function ConcertManagement() {
                   </label>
                   <select
                     value={formData.type}
-                    onChange={(e) => setFormData({ ...formData, type: e.target.value as Concert['type'] })}
+                    onChange={(e) => setFormData({ ...formData, type: e.target.value as EventType['type'] })}
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-accent focus:border-transparent"
                   >
-                    <option value="concert">Concert</option>
-                    <option value="repetition">Répétition</option>
-                    <option value="audition">Audition</option>
+                    <option value="rehearsal">Répétition</option>
+                    <option value="gig">Concert</option>
                   </select>
                 </div>
 
@@ -279,44 +234,15 @@ export function ConcertManagement() {
                   </label>
                   <input
                     type="text"
-                    value={formData.venue}
-                    onChange={(e) => setFormData({ ...formData, venue: e.target.value })}
+                    value={formData.location}
+                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-accent focus:border-transparent"
                     required
                   />
                 </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Contact associé
-                  </label>
-                  <select
-                    value={formData.contactId}
-                    onChange={(e) => setFormData({ ...formData, contactId: e.target.value })}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-accent focus:border-transparent"
-                  >
-                    <option value="">Sélectionner un contact</option>
-                    {contacts.map(contact => (
-                      <option key={contact.id} value={contact.id}>
-                        {contact.name} - {contact.city}
-                      </option>
-                    ))}
-                  </select>
-                </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Description
-                </label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  rows={3}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-accent focus:border-transparent"
-                  placeholder="Description de l'événement..."
-                />
-              </div>
+
 
               <div className="flex justify-end space-x-4">
                 <button
@@ -330,7 +256,7 @@ export function ConcertManagement() {
                   type="submit"
                   className="bg-primary text-white px-6 py-2 rounded-lg font-medium hover:bg-primary/90 transition-colors focus:outline-none focus:ring-2 focus:ring-accent"
                 >
-                  {editingConcert ? 'Modifier' : 'Créer'}
+                  {editingEvent ? 'Modifier' : 'Créer'}
                 </button>
               </div>
             </form>
