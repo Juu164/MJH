@@ -3,6 +3,8 @@ export interface CalendarEvent {
   title: string;
   date: string;
   time: string;
+  endTime?: string;
+  description?: string;
   type: 'rehearsal' | 'gig';
   location: string;
 }

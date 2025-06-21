@@ -6,6 +6,7 @@ import { useEvents, Event } from './useEvents';
 import { useApp } from './AppContext';
 import { useNavigate } from 'react-router-dom';
 import { EventFormModal } from './EventFormModal';
+import { AddEventModal } from './AddEventModal';
 
 export function CalendarPage() {
   const { dispatch } = useApp();
@@ -13,6 +14,7 @@ export function CalendarPage() {
   const { events } = useEvents();
   const [selected, setSelected] = useState<EventApi | null>(null);
   const [editingEvent, setEditingEvent] = useState<Event | null>(null);
+  const [creatingDate, setCreatingDate] = useState<string | null>(null);
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
@@ -21,13 +23,34 @@ export function CalendarPage() {
         plugins={[dayGridPlugin]}
         initialView="dayGridMonth"
         locale="fr"
+        dayCellContent={(arg) => {
+          const dateStr = arg.date.toISOString().split('T')[0];
+          return (
+            <div className="relative h-full">
+              <span>{arg.dayNumberText}</span>
+              <button
+                type="button"
+                onClick={() => setCreatingDate(dateStr)}
+                className="absolute top-0 right-0 w-6 h-6 flex items-center justify-center text-xs bg-primary text-white rounded opacity-50 hover:opacity-100"
+              >
+                +
+              </button>
+            </div>
+          );
+        }}
         events={events.map(e => ({
           id: e.id,
           title: e.title,
           date: e.date,
           backgroundColor: e.type === 'rehearsal' ? '#60A5FA' : '#A78BFA',
           borderColor: e.type === 'rehearsal' ? '#60A5FA' : '#A78BFA',
-          extendedProps: { location: e.location, time: e.time, type: e.type }
+          extendedProps: {
+            location: e.location,
+            time: e.time,
+            endTime: e.endTime,
+            description: e.description,
+            type: e.type,
+          }
         }))}
         eventClick={(info) => setSelected(info.event)}
         eventDidMount={(info) => {
@@ -46,6 +69,7 @@ export function CalendarPage() {
             <h2 className="text-xl font-bold text-dark mb-2">{selected.title}</h2>
             <p className="text-sm mb-2">
               {selected.extendedProps.location} - {selected.extendedProps.time}
+              {selected.extendedProps.endTime ? ` - ${selected.extendedProps.endTime}` : ''}
             </p>
             <a
               href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selected.extendedProps.location)}`}
@@ -97,6 +121,9 @@ export function CalendarPage() {
       )}
       {editingEvent && (
         <EventFormModal event={editingEvent} onClose={() => setEditingEvent(null)} />
+      )}
+      {creatingDate && (
+        <AddEventModal date={creatingDate} onClose={() => setCreatingDate(null)} />
       )}
     </div>
   );
