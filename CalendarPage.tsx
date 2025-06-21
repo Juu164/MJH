@@ -2,13 +2,17 @@ import React, { useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import { EventApi } from '@fullcalendar/core';
-import { useEvents } from './useEvents';
+import { useEvents, Event } from './useEvents';
 import { useApp } from './AppContext';
+import { useNavigate } from 'react-router-dom';
+import { EventFormModal } from './EventFormModal';
 
 export function CalendarPage() {
   const { dispatch } = useApp();
+  const navigate = useNavigate();
   const { events } = useEvents();
   const [selected, setSelected] = useState<EventApi | null>(null);
+  const [editingEvent, setEditingEvent] = useState<Event | null>(null);
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
@@ -26,6 +30,14 @@ export function CalendarPage() {
           extendedProps: { location: e.location, time: e.time, type: e.type }
         }))}
         eventClick={(info) => setSelected(info.event)}
+        eventDidMount={(info) => {
+          info.el.addEventListener('dblclick', () => {
+            const ev = events.find(e => e.id === info.event.id);
+            if (ev) {
+              setEditingEvent(ev);
+            }
+          });
+        }}
         height="auto"
       />
       {selected && (
@@ -59,6 +71,19 @@ export function CalendarPage() {
             >
               Voir disponibilités
             </button>
+            <button
+              className="block mt-1 text-primary text-sm underline"
+              onClick={() => {
+                if (selected) {
+                  const id = selected.id;
+                  setSelected(null);
+                  dispatch({ type: 'SET_TAB', payload: 'concerts' });
+                  navigate(`/concerts/${id}`);
+                }
+              }}
+            >
+              Voir l'événement
+            </button>
             <div className="mt-4 text-right">
               <button
                 onClick={() => setSelected(null)}
@@ -69,6 +94,9 @@ export function CalendarPage() {
             </div>
           </div>
         </div>
+      )}
+      {editingEvent && (
+        <EventFormModal event={editingEvent} onClose={() => setEditingEvent(null)} />
       )}
     </div>
   );

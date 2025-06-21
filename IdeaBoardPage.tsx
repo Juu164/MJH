@@ -47,7 +47,8 @@ export function IdeaBoardPage() {
       prev.map(i => (i.id === id ? { ...i, text: editValues[id], isEditing: false } : i))
     );
     setEditValues(prev => {
-      const { [id]: _removed, ...rest } = prev;
+      const rest = { ...prev };
+      delete rest[id];
       return rest;
     });
   };
@@ -55,7 +56,8 @@ export function IdeaBoardPage() {
   const cancelEdit = (id: string) => {
     setIdeas(prev => prev.map(i => (i.id === id ? { ...i, isEditing: false } : i)));
     setEditValues(prev => {
-      const { [id]: _removed, ...rest } = prev;
+      const rest = { ...prev };
+      delete rest[id];
       return rest;
     });
   };
@@ -68,21 +70,16 @@ export function IdeaBoardPage() {
       <h1 className="text-3xl font-bold text-dark mb-4">Pense-Bête</h1>
       <form onSubmit={addIdea} className="mb-6 space-y-2">
         <div>
-          <textarea
+          <label className="block text-sm font-medium text-gray-700 mb-1">Titre</label>
+          <input
+            type="text"
             value={newIdea}
             onChange={e => setNewIdea(e.target.value)}
-            maxLength={2500}
-            className="w-full resize-none rounded-lg px-3 py-2 border focus:ring-2 focus:ring-accent focus:border-transparent"
-            placeholder="Nouvelle idée"
-            style={{
-              fontFamily: 'Roboto, sans-serif',
-              backgroundColor: '#F9FAFB',
-              borderColor: '#CBD5E1',
-              color: '#374151'
-            }}
+            maxLength={15}
+            className="w-full rounded-lg px-3 py-2 border focus:ring-2 focus:ring-accent focus:border-transparent"
           />
           <div className="text-right text-xs text-gray-500 mt-1">
-            {newIdea.length} / 2500
+            {newIdea.length} / 15
           </div>
         </div>
         <button
@@ -101,14 +98,21 @@ export function IdeaBoardPage() {
           >
             <div>
               {i.isEditing ? (
-                <input
-                  type="text"
-                  value={editValues[i.id] || ''}
-                  onChange={e =>
-                    setEditValues(prev => ({ ...prev, [i.id]: e.target.value }))
-                  }
-                  className="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:ring-2 focus:ring-accent focus:border-transparent"
-                />
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">Info</label>
+                  <textarea
+                    value={editValues[i.id] || ''}
+                    onChange={e =>
+                      setEditValues(prev => ({ ...prev, [i.id]: e.target.value }))
+                    }
+                    maxLength={3000}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-1 text-sm focus:ring-2 focus:ring-accent focus:border-transparent resize-none"
+                    rows={3}
+                  />
+                  <div className="text-right text-xs text-gray-500 mt-1">
+                    {(editValues[i.id] || '').length} / 3000
+                  </div>
+                </div>
               ) : (
                 <>
                   <p className="text-sm font-medium text-dark">{i.text}</p>
@@ -170,14 +174,21 @@ export function IdeaBoardPage() {
               >
                 <div>
                   {i.isEditing ? (
-                    <input
-                      type="text"
-                      value={editValues[i.id] || ''}
-                      onChange={e =>
-                        setEditValues(prev => ({ ...prev, [i.id]: e.target.value }))
-                      }
-                      className="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:ring-2 focus:ring-accent focus:border-transparent"
-                    />
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">Info</label>
+                      <textarea
+                        value={editValues[i.id] || ''}
+                        onChange={e =>
+                          setEditValues(prev => ({ ...prev, [i.id]: e.target.value }))
+                        }
+                        maxLength={3000}
+                        className="w-full border border-gray-300 rounded-lg px-3 py-1 text-sm focus:ring-2 focus:ring-accent focus:border-transparent resize-none"
+                        rows={3}
+                      />
+                      <div className="text-right text-xs text-gray-500 mt-1">
+                        {(editValues[i.id] || '').length} / 3000
+                      </div>
+                    </div>
                   ) : (
                     <>
                       <p className="text-sm text-dark">{i.text}</p>

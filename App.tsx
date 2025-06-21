@@ -5,6 +5,7 @@ import { LoginForm } from './LoginForm';
 import { Navigation } from './Navigation';
 import { Dashboard } from './Dashboard';
 import { AvailabilityCalendar } from './AvailabilityCalendar';
+import { Routes, Route } from 'react-router-dom';
 const CalendarPage = React.lazy(() => import('./CalendarPage').then(m => ({ default: m.CalendarPage }))); 
 const ConcertManagement = React.lazy(() => import('./ConcertManagement').then(m => ({ default: m.ConcertManagement })));
 const ContactDirectory = React.lazy(() => import('./ContactDirectory').then(m => ({ default: m.ContactDirectory })));
@@ -70,7 +71,10 @@ function App() {
   return (
     <EventsProvider>
       <AppProvider>
-        <AppContent />
+        <Routes>
+          <Route path="/concerts/:eventId" element={<AppContent />} />
+          <Route path="*" element={<AppContent />} />
+        </Routes>
       </AppProvider>
     </EventsProvider>
   );
