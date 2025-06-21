@@ -1,5 +1,6 @@
 import React from 'react';
 import { User } from './index';
+import { useApp } from './AppContext';
 
 export interface ConfirmationsState {
   [date: string]: {
@@ -18,7 +19,11 @@ interface Props {
 }
 
 export function MemberAvailabilityRow({ members, date, slotId, confirmations, setConfirmations }: Props) {
+  const { state } = useApp();
+  const currentUser = state.currentUser;
+
   const toggle = (memberId: string) => {
+    if (!currentUser || currentUser.id !== memberId) return;
     setConfirmations(prev => {
       const dateConf = prev[date] || {};
       const slotConf = dateConf[slotId] || {};
@@ -46,12 +51,14 @@ export function MemberAvailabilityRow({ members, date, slotId, confirmations, se
         return (
           <div key={m.id} className="flex items-center justify-between text-sm">
             <span>{m.name}</span>
-            <button
-              onClick={() => toggle(m.id)}
-              className={`text-white px-2 py-1 rounded ${available ? 'bg-green-500' : 'bg-red-500'}`}
-            >
-              {available ? '✅' : '❌'}
-            </button>
+            {currentUser?.id === m.id && (
+              <button
+                onClick={() => toggle(m.id)}
+                className={`text-white px-2 py-1 rounded ${available ? 'bg-green-500' : 'bg-red-500'}`}
+              >
+                {available ? '✅' : '❌'}
+              </button>
+            )}
           </div>
         );
       })}
