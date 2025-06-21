@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { AppProvider, useApp } from './AppContext';
+import { EventsProvider } from './useEvents';
 import { LoginForm } from './LoginForm';
 import { Navigation } from './Navigation';
 import { Dashboard } from './Dashboard';
@@ -67,9 +68,11 @@ function AppContent() {
 
 function App() {
   return (
-    <AppProvider>
-      <AppContent />
-    </AppProvider>
+    <EventsProvider>
+      <AppProvider>
+        <AppContent />
+      </AppProvider>
+    </EventsProvider>
   );
 }
 
