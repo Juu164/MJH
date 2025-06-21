@@ -4,6 +4,8 @@ import {
   Calendar,
   CalendarDays,
   Mic,
+  StickyNote,
+  FileText,
   Users,
   Settings,
   LogOut,
@@ -23,6 +25,8 @@ export function Navigation() {
     { id: 'calendar' as const, label: 'Calendrier', icon: CalendarDays },
     { id: 'concerts' as const, label: 'Concerts', icon: Mic },
     { id: 'contacts' as const, label: 'Contacts', icon: Users },
+    { id: 'ideas' as const, label: 'Pense-Bête', icon: StickyNote },
+    { id: 'documents' as const, label: 'Documents', icon: FileText },
     ...(currentUser?.role === 'admin' ? [{ id: 'admin' as const, label: 'Administration', icon: Settings }] : []),
   ];
 

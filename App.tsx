@@ -8,6 +8,8 @@ const CalendarPage = React.lazy(() => import('./CalendarPage').then(m => ({ defa
 const ConcertManagement = React.lazy(() => import('./ConcertManagement').then(m => ({ default: m.ConcertManagement })));
 const ContactDirectory = React.lazy(() => import('./ContactDirectory').then(m => ({ default: m.ContactDirectory })));
 const AdminPanel = React.lazy(() => import('./AdminPanel').then(m => ({ default: m.AdminPanel })));
+const IdeaBoardPage = React.lazy(() => import('./IdeaBoardPage').then(m => ({ default: m.IdeaBoardPage })));
+const DocumentsPage = React.lazy(() => import('./DocumentsPage').then(m => ({ default: m.DocumentsPage })));
 import { BackToTop } from './BackToTop';
 
 function AppContent() {
@@ -39,6 +41,10 @@ function AppContent() {
         return <ConcertManagement />;
       case 'contacts':
         return <ContactDirectory />;
+      case 'ideas':
+        return <IdeaBoardPage />;
+      case 'documents':
+        return <DocumentsPage />;
       case 'admin':
         return currentUser.role === 'admin' ? <AdminPanel /> : <Dashboard />;
       default:
