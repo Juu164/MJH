@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.day-cell {
+  position: relative;
+}
+
+.add-slot-btn {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+}

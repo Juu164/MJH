@@ -26,12 +26,12 @@ export function CalendarPage() {
         dayCellContent={(arg) => {
           const dateStr = arg.date.toISOString().split('T')[0];
           return (
-            <div className="relative h-full">
+            <div className="day-cell h-full">
               <span>{arg.dayNumberText}</span>
               <button
                 type="button"
                 onClick={() => setCreatingDate(dateStr)}
-                className="absolute top-0 right-0 w-6 h-6 flex items-center justify-center text-xs bg-primary text-white rounded opacity-50 hover:opacity-100"
+                className="add-slot-btn w-6 h-6 flex items-center justify-center text-xs bg-primary text-white rounded opacity-50 hover:opacity-100"
               >
                 +
               </button>
