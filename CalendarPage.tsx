@@ -30,7 +30,7 @@ export function CalendarPage() {
               <button
                 type="button"
                 onClick={() => setCreatingDate(dateStr)}
-                className="add-slot-btn flex items-center justify-center text-xs opacity-50 hover:opacity-100"
+                className="add-slot-btn flex items-center justify-center text-xs hover:opacity-80"
               >
                 +
               </button>
