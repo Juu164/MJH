@@ -66,14 +66,25 @@ export function IdeaBoardPage() {
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <h1 className="text-3xl font-bold text-dark mb-4">Pense-Bête</h1>
-      <form onSubmit={addIdea} className="mb-6 flex space-x-2">
-        <input
-          type="text"
-          value={newIdea}
-          onChange={e => setNewIdea(e.target.value)}
-          className="flex-1 border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-accent focus:border-transparent"
-          placeholder="Nouvelle idée"
-        />
+      <form onSubmit={addIdea} className="mb-6 space-y-2">
+        <div>
+          <textarea
+            value={newIdea}
+            onChange={e => setNewIdea(e.target.value)}
+            maxLength={2500}
+            className="w-full resize-none rounded-lg px-3 py-2 border focus:ring-2 focus:ring-accent focus:border-transparent"
+            placeholder="Nouvelle idée"
+            style={{
+              fontFamily: 'Roboto, sans-serif',
+              backgroundColor: '#F9FAFB',
+              borderColor: '#CBD5E1',
+              color: '#374151'
+            }}
+          />
+          <div className="text-right text-xs text-gray-500 mt-1">
+            {newIdea.length} / 2500
+          </div>
+        </div>
         <button
           type="submit"
           className="bg-primary text-white px-4 py-2 rounded-lg font-medium"
