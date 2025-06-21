@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from './AppContext';
 import { InfoModal } from './InfoModal';
+import { InfoEditor } from './InfoEditor';
 
 interface Idea {
   id: string;
@@ -91,14 +92,8 @@ export function IdeaBoardPage() {
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Info</label>
-          <textarea
-            value={newInfo}
-            onChange={e => setNewInfo(e.target.value)}
-            maxLength={3000}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-accent focus:border-transparent resize-none h-[100px]"
-          />
-          <div className="flex items-center justify-between mt-1">
-            <span className="text-xs text-gray-500">{newInfo.length} / 3000</span>
+          <InfoEditor value={newInfo} onChange={setNewInfo} />
+          <div className="flex items-center justify-end mt-1">
             <button
               type="button"
               onClick={() => setShowInfoModal(true)}
@@ -133,18 +128,13 @@ export function IdeaBoardPage() {
               {i.isEditing ? (
                 <div>
                   <label className="block text-xs font-medium text-gray-700 mb-1">Info</label>
-                  <textarea
+                  <InfoEditor
                     value={editValues[i.id] || ''}
-                    onChange={e =>
-                      setEditValues(prev => ({ ...prev, [i.id]: e.target.value }))
+                    onChange={(val) =>
+                      setEditValues(prev => ({ ...prev, [i.id]: val }))
                     }
-                    maxLength={3000}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-1 text-sm focus:ring-2 focus:ring-accent focus:border-transparent resize-none h-[100px]"
                   />
-                  <div className="flex items-center justify-between mt-1">
-                    <span className="text-xs text-gray-500">
-                      {(editValues[i.id] || '').length} / 3000
-                    </span>
+                  <div className="flex items-center justify-end mt-1">
                     <button
                       type="button"
                       onClick={() => setExpandedInfoId(i.id)}
@@ -226,18 +216,13 @@ export function IdeaBoardPage() {
                   {i.isEditing ? (
                     <div>
                       <label className="block text-xs font-medium text-gray-700 mb-1">Info</label>
-                      <textarea
+                      <InfoEditor
                         value={editValues[i.id] || ''}
-                        onChange={e =>
-                          setEditValues(prev => ({ ...prev, [i.id]: e.target.value }))
+                        onChange={(val) =>
+                          setEditValues(prev => ({ ...prev, [i.id]: val }))
                         }
-                        maxLength={3000}
-                        className="w-full border border-gray-300 rounded-lg px-3 py-1 text-sm focus:ring-2 focus:ring-accent focus:border-transparent resize-none h-[100px]"
                       />
-                      <div className="flex items-center justify-between mt-1">
-                        <span className="text-xs text-gray-500">
-                          {(editValues[i.id] || '').length} / 3000
-                        </span>
+                      <div className="flex items-center justify-end mt-1">
                         <button
                           type="button"
                           onClick={() => setExpandedInfoId(i.id)}
