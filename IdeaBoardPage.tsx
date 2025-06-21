@@ -7,6 +7,7 @@ interface Idea {
   author: string;
   date: string;
   status: 'todo' | 'done';
+  isEditing?: boolean;
 }
 
 export function IdeaBoardPage() {
@@ -23,7 +24,8 @@ export function IdeaBoardPage() {
       text: newIdea.trim(),
       author: currentUser.name,
       date: new Date().toISOString().split('T')[0],
-      status: 'todo'
+      status: 'todo',
+      isEditing: false
     };
     setIdeas(prev => [...prev, idea]);
     setNewIdea('');
@@ -31,6 +33,31 @@ export function IdeaBoardPage() {
 
   const setStatus = (id: string, status: Idea['status']) => {
     setIdeas(prev => prev.map(i => (i.id === id ? { ...i, status } : i)));
+  };
+
+  const [editValues, setEditValues] = useState<{ [id: string]: string }>({});
+
+  const startEdit = (id: string, text: string) => {
+    setIdeas(prev => prev.map(i => (i.id === id ? { ...i, isEditing: true } : i)));
+    setEditValues(prev => ({ ...prev, [id]: text }));
+  };
+
+  const saveEdit = (id: string) => {
+    setIdeas(prev =>
+      prev.map(i => (i.id === id ? { ...i, text: editValues[id], isEditing: false } : i))
+    );
+    setEditValues(prev => {
+      const { [id]: _removed, ...rest } = prev;
+      return rest;
+    });
+  };
+
+  const cancelEdit = (id: string) => {
+    setIdeas(prev => prev.map(i => (i.id === id ? { ...i, isEditing: false } : i)));
+    setEditValues(prev => {
+      const { [id]: _removed, ...rest } = prev;
+      return rest;
+    });
   };
 
   const pending = ideas.filter(i => i.status !== 'done');
@@ -62,12 +89,48 @@ export function IdeaBoardPage() {
             className="bg-white p-4 rounded-lg border border-gray-200 flex justify-between items-center"
           >
             <div>
-              <p className="text-sm font-medium text-dark">{i.text}</p>
-              <p className="text-xs text-gray-500">
-                {i.author} – {new Date(i.date).toLocaleDateString('fr-FR')}
-              </p>
+              {i.isEditing ? (
+                <input
+                  type="text"
+                  value={editValues[i.id] || ''}
+                  onChange={e =>
+                    setEditValues(prev => ({ ...prev, [i.id]: e.target.value }))
+                  }
+                  className="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:ring-2 focus:ring-accent focus:border-transparent"
+                />
+              ) : (
+                <>
+                  <p className="text-sm font-medium text-dark">{i.text}</p>
+                  <p className="text-xs text-gray-500">
+                    {i.author} – {new Date(i.date).toLocaleDateString('fr-FR')}
+                  </p>
+                </>
+              )}
             </div>
             <div className="flex space-x-2">
+              {i.isEditing ? (
+                <>
+                  <button
+                    onClick={() => saveEdit(i.id)}
+                    className="bg-primary text-white px-2 py-1 rounded text-xs"
+                  >
+                    Enregistrer
+                  </button>
+                  <button
+                    onClick={() => cancelEdit(i.id)}
+                    className="bg-gray-300 text-dark px-2 py-1 rounded text-xs"
+                  >
+                    Annuler
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={() => startEdit(i.id, i.text)}
+                  className="bg-blue-500 text-white px-2 py-1 rounded text-xs"
+                >
+                  ✏️ Modifier
+                </button>
+              )}
               <button
                 onClick={() => setStatus(i.id, 'todo')}
                 className="bg-orange-500 text-white px-2 py-1 rounded text-xs"
@@ -95,12 +158,48 @@ export function IdeaBoardPage() {
                 className="bg-white p-3 rounded-lg border border-gray-200 flex justify-between items-center"
               >
                 <div>
-                  <p className="text-sm text-dark">{i.text}</p>
-                  <p className="text-xs text-gray-500">
-                    {i.author} – {new Date(i.date).toLocaleDateString('fr-FR')}
-                  </p>
+                  {i.isEditing ? (
+                    <input
+                      type="text"
+                      value={editValues[i.id] || ''}
+                      onChange={e =>
+                        setEditValues(prev => ({ ...prev, [i.id]: e.target.value }))
+                      }
+                      className="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:ring-2 focus:ring-accent focus:border-transparent"
+                    />
+                  ) : (
+                    <>
+                      <p className="text-sm text-dark">{i.text}</p>
+                      <p className="text-xs text-gray-500">
+                        {i.author} – {new Date(i.date).toLocaleDateString('fr-FR')}
+                      </p>
+                    </>
+                  )}
                 </div>
                 <div className="flex space-x-2">
+                  {i.isEditing ? (
+                    <>
+                      <button
+                        onClick={() => saveEdit(i.id)}
+                        className="bg-primary text-white px-2 py-1 rounded text-xs"
+                      >
+                        Enregistrer
+                      </button>
+                      <button
+                        onClick={() => cancelEdit(i.id)}
+                        className="bg-gray-300 text-dark px-2 py-1 rounded text-xs"
+                      >
+                        Annuler
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      onClick={() => startEdit(i.id, i.text)}
+                      className="bg-blue-500 text-white px-2 py-1 rounded text-xs"
+                    >
+                      ✏️ Modifier
+                    </button>
+                  )}
                   <button
                     onClick={() => setStatus(i.id, 'todo')}
                     className="bg-orange-500 text-white px-2 py-1 rounded text-xs"
