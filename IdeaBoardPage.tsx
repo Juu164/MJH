@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useApp } from './AppContext';
+import { InfoModal } from './InfoModal';
 
 interface Idea {
   id: string;
-  text: string;
+  title: string;
+  info: string;
   author: string;
   date: string;
   status: 'todo' | 'done';
@@ -14,21 +16,25 @@ export function IdeaBoardPage() {
   const { state } = useApp();
   const { currentUser } = state;
   const [ideas, setIdeas] = useState<Idea[]>([]);
-  const [newIdea, setNewIdea] = useState('');
+  const [newTitle, setNewTitle] = useState('');
+  const [newInfo, setNewInfo] = useState('');
+  const [showInfoModal, setShowInfoModal] = useState(false);
 
   const addIdea = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newIdea.trim() || !currentUser) return;
+    if (!newTitle.trim() || !currentUser) return;
     const idea: Idea = {
       id: Math.random().toString(36).substr(2, 9),
-      text: newIdea.trim(),
+      title: newTitle.trim(),
+      info: newInfo.trim(),
       author: currentUser.name,
       date: new Date().toISOString().split('T')[0],
       status: 'todo',
       isEditing: false
     };
     setIdeas(prev => [...prev, idea]);
-    setNewIdea('');
+    setNewTitle('');
+    setNewInfo('');
   };
 
   const setStatus = (id: string, status: Idea['status']) => {
@@ -36,15 +42,16 @@ export function IdeaBoardPage() {
   };
 
   const [editValues, setEditValues] = useState<{ [id: string]: string }>({});
+  const [expandedInfoId, setExpandedInfoId] = useState<string | null>(null);
 
-  const startEdit = (id: string, text: string) => {
+  const startEdit = (id: string, info: string) => {
     setIdeas(prev => prev.map(i => (i.id === id ? { ...i, isEditing: true } : i)));
-    setEditValues(prev => ({ ...prev, [id]: text }));
+    setEditValues(prev => ({ ...prev, [id]: info }));
   };
 
   const saveEdit = (id: string) => {
     setIdeas(prev =>
-      prev.map(i => (i.id === id ? { ...i, text: editValues[id], isEditing: false } : i))
+      prev.map(i => (i.id === id ? { ...i, info: editValues[id], isEditing: false } : i))
     );
     setEditValues(prev => {
       const rest = { ...prev };
@@ -73,14 +80,40 @@ export function IdeaBoardPage() {
           <label className="block text-sm font-medium text-gray-700 mb-1">Titre</label>
           <input
             type="text"
-            value={newIdea}
-            onChange={e => setNewIdea(e.target.value)}
-            maxLength={15}
+            value={newTitle}
+            onChange={e => setNewTitle(e.target.value)}
+            maxLength={150}
             className="w-full rounded-lg px-3 py-2 border focus:ring-2 focus:ring-accent focus:border-transparent"
           />
           <div className="text-right text-xs text-gray-500 mt-1">
-            {newIdea.length} / 15
+            {newTitle.length} / 150
           </div>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Info</label>
+          <textarea
+            value={newInfo}
+            onChange={e => setNewInfo(e.target.value)}
+            maxLength={3000}
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-accent focus:border-transparent resize-none h-[100px]"
+          />
+          <div className="flex items-center justify-between mt-1">
+            <span className="text-xs text-gray-500">{newInfo.length} / 3000</span>
+            <button
+              type="button"
+              onClick={() => setShowInfoModal(true)}
+              className="text-primary text-xs underline"
+            >
+              🔍 Voir plus
+            </button>
+          </div>
+          {showInfoModal && (
+            <InfoModal
+              value={newInfo}
+              onChange={setNewInfo}
+              onClose={() => setShowInfoModal(false)}
+            />
+          )}
         </div>
         <button
           type="submit"
@@ -106,16 +139,33 @@ export function IdeaBoardPage() {
                       setEditValues(prev => ({ ...prev, [i.id]: e.target.value }))
                     }
                     maxLength={3000}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-1 text-sm focus:ring-2 focus:ring-accent focus:border-transparent resize-none"
-                    rows={3}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-1 text-sm focus:ring-2 focus:ring-accent focus:border-transparent resize-none h-[100px]"
                   />
-                  <div className="text-right text-xs text-gray-500 mt-1">
-                    {(editValues[i.id] || '').length} / 3000
+                  <div className="flex items-center justify-between mt-1">
+                    <span className="text-xs text-gray-500">
+                      {(editValues[i.id] || '').length} / 3000
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setExpandedInfoId(i.id)}
+                      className="text-primary text-xs underline"
+                    >
+                      🔍 Voir plus
+                    </button>
                   </div>
+                  {expandedInfoId === i.id && (
+                    <InfoModal
+                      value={editValues[i.id] || ''}
+                      onChange={(val) =>
+                        setEditValues(prev => ({ ...prev, [i.id]: val }))
+                      }
+                      onClose={() => setExpandedInfoId(null)}
+                    />
+                  )}
                 </div>
               ) : (
                 <>
-                  <p className="text-sm font-medium text-dark">{i.text}</p>
+                  <p className="text-sm font-medium text-dark">{i.title}</p>
                   <p className="text-xs text-gray-500">
                     {i.author} – {new Date(i.date).toLocaleDateString('fr-FR')}
                   </p>
@@ -140,7 +190,7 @@ export function IdeaBoardPage() {
                 </>
               ) : (
                 <button
-                  onClick={() => startEdit(i.id, i.text)}
+                  onClick={() => startEdit(i.id, i.info)}
                   className="bg-blue-500 text-white px-2 py-1 rounded text-xs"
                 >
                   ✏️ Modifier
@@ -182,16 +232,33 @@ export function IdeaBoardPage() {
                           setEditValues(prev => ({ ...prev, [i.id]: e.target.value }))
                         }
                         maxLength={3000}
-                        className="w-full border border-gray-300 rounded-lg px-3 py-1 text-sm focus:ring-2 focus:ring-accent focus:border-transparent resize-none"
-                        rows={3}
+                        className="w-full border border-gray-300 rounded-lg px-3 py-1 text-sm focus:ring-2 focus:ring-accent focus:border-transparent resize-none h-[100px]"
                       />
-                      <div className="text-right text-xs text-gray-500 mt-1">
-                        {(editValues[i.id] || '').length} / 3000
+                      <div className="flex items-center justify-between mt-1">
+                        <span className="text-xs text-gray-500">
+                          {(editValues[i.id] || '').length} / 3000
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => setExpandedInfoId(i.id)}
+                          className="text-primary text-xs underline"
+                        >
+                          🔍 Voir plus
+                        </button>
                       </div>
+                      {expandedInfoId === i.id && (
+                        <InfoModal
+                          value={editValues[i.id] || ''}
+                          onChange={(val) =>
+                            setEditValues(prev => ({ ...prev, [i.id]: val }))
+                          }
+                          onClose={() => setExpandedInfoId(null)}
+                        />
+                      )}
                     </div>
                   ) : (
                     <>
-                      <p className="text-sm text-dark">{i.text}</p>
+                      <p className="text-sm text-dark">{i.title}</p>
                       <p className="text-xs text-gray-500">
                         {i.author} – {new Date(i.date).toLocaleDateString('fr-FR')}
                       </p>
@@ -216,7 +283,7 @@ export function IdeaBoardPage() {
                     </>
                   ) : (
                     <button
-                      onClick={() => startEdit(i.id, i.text)}
+                      onClick={() => startEdit(i.id, i.info)}
                       className="bg-blue-500 text-white px-2 py-1 rounded text-xs"
                     >
                       ✏️ Modifier
