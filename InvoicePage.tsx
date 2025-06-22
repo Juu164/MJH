@@ -45,7 +45,7 @@ export function InvoicePage() {
   const [errors, setErrors] = useState<Record<string, boolean>>({});
   const [showPreview, setShowPreview] = useState(false);
   const [preview, setPreview] = useState<ReturnType<typeof createInvoice> | null>(null);
-  const [activeTab, setActiveTab] = useState<'unpaid' | 'paid'>('unpaid');
+  const [view, setView] = useState<'create' | 'unpaid' | 'paid'>('create');
 
   const updateFromHT = (htValue: string, rateValue: string) => {
     const ht = parseFloat(htValue);
@@ -96,22 +96,29 @@ export function InvoicePage() {
     setForm({ ...emptyForm });
   };
 
-  const filtered = invoices.filter(i => i.isPaid === (activeTab === 'paid'));
+  const filtered = invoices.filter(i =>
+    view === 'paid' ? i.isPaid : view === 'unpaid' ? !i.isPaid : false
+  );
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <h1 className="text-3xl font-bold mb-4">Factures</h1>
-      <div className="flex border-b mb-6 space-x-4">
+      <div className="flex space-x-4 mb-6">
         <button
-          className={`pb-2 ${activeTab==='unpaid'?'border-b-2 border-primary font-semibold':''}`}
-          onClick={() => setActiveTab('unpaid')}
+          className={`px-4 py-2 rounded-lg border ${view==='create' ? 'bg-primary text-white' : 'bg-white'}`}
+          onClick={() => setView('create')}
+        >Créer facture</button>
+        <button
+          className={`px-4 py-2 rounded-lg border ${view==='unpaid' ? 'bg-primary text-white' : 'bg-white'}`}
+          onClick={() => setView('unpaid')}
         >Factures non acquittées</button>
         <button
-          className={`pb-2 ${activeTab==='paid'?'border-b-2 border-primary font-semibold':''}`}
-          onClick={() => setActiveTab('paid')}
+          className={`px-4 py-2 rounded-lg border ${view==='paid' ? 'bg-primary text-white' : 'bg-white'}`}
+          onClick={() => setView('paid')}
         >Factures acquittées</button>
       </div>
 
+      {view === 'create' && (
       <form onSubmit={handleSubmit} className="space-y-4 mb-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
@@ -247,9 +254,11 @@ export function InvoicePage() {
               className="w-full border border-gray-300 rounded-lg px-3 py-2 mb-2"
             >
               <option value="0">0 %</option>
+              <option value="2.1">2,1 %</option>
               <option value="5.5">5,5 %</option>
               <option value="10">10 %</option>
               <option value="20">20 %</option>
+              <option value="20" title="0% Exonération\n2,1% Médicaments\n5,5% Produits essentiels\n10% Restauration et travaux\n20% Taux normal">*</option>
             </select>
             <input
               type="number"
@@ -264,6 +273,7 @@ export function InvoicePage() {
         </div>
         <button type="submit" className="bg-primary text-white px-4 py-2 rounded-lg">Prévisualiser</button>
       </form>
+      )}
 
       {showPreview && preview && (
         <div className="bg-white p-6 shadow border mb-8" id="invoice-preview">
@@ -309,6 +319,7 @@ export function InvoicePage() {
         </div>
       )}
 
+      {view !== 'create' && (
       <div>
         {filtered.map(inv => (
           <div key={inv.id} className="flex items-center justify-between border-b py-2">
@@ -320,6 +331,7 @@ export function InvoicePage() {
           </div>
         ))}
       </div>
+      )}
     </div>
   );
 }
