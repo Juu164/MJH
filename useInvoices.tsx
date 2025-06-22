@@ -53,7 +53,7 @@ export function InvoicesProvider({ children }: { children: ReactNode }) {
       const due = new Date(inv.serviceDate);
       due.setDate(due.getDate() + 30);
       if (!inv.isPaid && new Date() > due) {
-        add({ id: notifId, message: `Facture ${inv.number} en retard` });
+        add({ id: notifId, message: `Facture ${inv.number} en retard`, date: new Date().toISOString() });
       } else {
         remove(notifId);
       }
@@ -75,7 +75,7 @@ export function InvoicesProvider({ children }: { children: ReactNode }) {
     const due = new Date(invoice.serviceDate);
     due.setDate(due.getDate() + 30);
     if (new Date() > due) {
-      add({ id: `invoice-${invoice.id}`, message: `Facture ${invoice.number} en retard` });
+      add({ id: `invoice-${invoice.id}`, message: `Facture ${invoice.number} en retard`, date: new Date().toISOString() });
     }
     return invoice;
   };
