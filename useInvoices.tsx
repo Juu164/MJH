@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { useNotifications } from './useNotifications';
 
 export interface Invoice {
   id: string;
@@ -43,9 +44,20 @@ export function InvoicesProvider({ children }: { children: ReactNode }) {
     const stored = localStorage.getItem('invoices');
     return stored ? JSON.parse(stored) : [];
   });
+  const { add, remove } = useNotifications();
 
   useEffect(() => {
     localStorage.setItem('invoices', JSON.stringify(invoices));
+    invoices.forEach(inv => {
+      const notifId = `invoice-${inv.id}`;
+      const due = new Date(inv.serviceDate);
+      due.setDate(due.getDate() + 30);
+      if (!inv.isPaid && new Date() > due) {
+        add({ id: notifId, message: `Facture ${inv.number} en retard` });
+      } else {
+        remove(notifId);
+      }
+    });
   }, [invoices]);
 
   const createInvoice = (data: Omit<Invoice, 'id' | 'number' | 'isPaid' | 'vatAmount'>): Invoice => {
@@ -60,11 +72,27 @@ export function InvoicesProvider({ children }: { children: ReactNode }) {
       isPaid: false,
     };
     setInvoices(prev => [...prev, invoice]);
+    const due = new Date(invoice.serviceDate);
+    due.setDate(due.getDate() + 30);
+    if (new Date() > due) {
+      add({ id: `invoice-${invoice.id}`, message: `Facture ${invoice.number} en retard` });
+    }
     return invoice;
   };
 
   const togglePaid = (id: string) => {
-    setInvoices(prev => prev.map(inv => inv.id === id ? { ...inv, isPaid: !inv.isPaid } : inv));
+    setInvoices(prev =>
+      prev.map(inv => {
+        if (inv.id === id) {
+          const updated = { ...inv, isPaid: !inv.isPaid };
+          if (updated.isPaid) {
+            remove(`invoice-${inv.id}`);
+          }
+          return updated;
+        }
+        return inv;
+      })
+    );
   };
 
   return (
