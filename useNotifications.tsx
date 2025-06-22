@@ -3,6 +3,7 @@ import React, { createContext, useContext, useEffect, useState, ReactNode } from
 export interface Notification {
   id: string;
   message: string;
+  date: string;
 }
 
 interface NotificationsCtx {
@@ -16,7 +17,17 @@ const NotificationsContext = createContext<NotificationsCtx | undefined>(undefin
 export function NotificationsProvider({ children }: { children: ReactNode }) {
   const [notifications, setNotifications] = useState<Notification[]>(() => {
     const stored = localStorage.getItem('notifications');
-    return stored ? JSON.parse(stored) : [];
+    if (!stored) return [];
+    try {
+      const data = JSON.parse(stored);
+      return data.map((n: any) => ({
+        id: n.id,
+        message: n.message,
+        date: n.date || new Date().toISOString(),
+      }));
+    } catch {
+      return [];
+    }
   });
 
   useEffect(() => {
