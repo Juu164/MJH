@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { AppProvider, useApp } from './AppContext';
 import { EventsProvider } from './useEvents';
 import { InvoicesProvider } from './useInvoices';
+import { NotificationsProvider, NotificationList } from './useNotifications';
 import { LoginForm } from './LoginForm';
 import { NavMenu } from './NavMenu';
 import { Dashboard } from './Dashboard';
@@ -73,16 +74,19 @@ function AppContent() {
 
 function App() {
   return (
-    <EventsProvider>
-      <InvoicesProvider>
-        <AppProvider>
-          <Routes>
-            <Route path="/concerts/:eventId" element={<AppContent />} />
-            <Route path="*" element={<AppContent />} />
-          </Routes>
-        </AppProvider>
-      </InvoicesProvider>
-    </EventsProvider>
+    <NotificationsProvider>
+      <EventsProvider>
+        <InvoicesProvider>
+          <AppProvider>
+            <Routes>
+              <Route path="/concerts/:eventId" element={<AppContent />} />
+              <Route path="*" element={<AppContent />} />
+            </Routes>
+            <NotificationList />
+          </AppProvider>
+        </InvoicesProvider>
+      </EventsProvider>
+    </NotificationsProvider>
   );
 }
 
