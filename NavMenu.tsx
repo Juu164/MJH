@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Home,
   Calendar,
@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import { useApp } from './AppContext';
 
-export function Navigation() {
+export function NavMenu() {
   const { state, dispatch } = useApp();
   const { currentTab, currentUser, isDarkMode } = state;
 
@@ -29,6 +29,18 @@ export function Navigation() {
     { id: 'documents' as const, label: 'Documents', icon: FileText },
     ...(currentUser?.role === 'admin' ? [{ id: 'admin' as const, label: 'Administration', icon: Settings }] : []),
   ];
+
+  const menuItems = [
+    { id: 'dashboard' as const, label: 'Tableau de bord' },
+    { id: 'availability' as const, label: 'Disponibilités' },
+    { id: 'calendar' as const, label: 'Calendrier' },
+    { id: 'concerts' as const, label: 'Concerts' },
+    ...(currentUser?.role === 'admin'
+      ? [{ id: 'invoice' as const, label: 'Administration' }]
+      : []),
+  ];
+
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const handleLogout = () => {
     dispatch({ type: 'LOGOUT' });
@@ -65,7 +77,7 @@ export function Navigation() {
           </div>
         </div>
 
-        <div className="ml-auto flex items-center space-x-4">
+        <div className="ml-auto flex items-center space-x-4 relative">
           <div className="text-right">
             <p className="text-sm font-medium text-dark dark:text-gray-100">{currentUser?.name}</p>
             <p className="text-xs text-gray-500 dark:text-gray-400">{currentUser?.instrument}</p>
@@ -84,6 +96,26 @@ export function Navigation() {
           >
             <LogOut className="w-5 h-5" />
           </button>
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="p-2 text-gray-500 hover:text-primary hover:bg-primary/10 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-accent"
+            aria-label="Menu"
+          >
+            &#9776;
+          </button>
+          {menuOpen && (
+            <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+              {menuItems.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => { dispatch({ type: 'SET_TAB', payload: item.id }); setMenuOpen(false); }}
+                  className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${currentTab === item.id ? 'bg-primary/10' : ''}`}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </nav>
 
@@ -113,7 +145,7 @@ export function Navigation() {
 
       {/* Mobile Header */}
       <header className="md:hidden bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between dark:bg-gray-800 dark:border-gray-700">
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 relative">
           <Music className="w-6 h-6 text-primary" />
           <span className="text-xl font-bold text-dark dark:text-gray-100">CalZik</span>
         </div>
@@ -132,6 +164,26 @@ export function Navigation() {
           >
             <LogOut className="w-5 h-5" />
           </button>
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="p-2 text-gray-500 hover:text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-accent"
+            aria-label="Menu"
+          >
+            &#9776;
+          </button>
+          {menuOpen && (
+            <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+              {menuItems.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => { dispatch({ type: 'SET_TAB', payload: item.id }); setMenuOpen(false); }}
+                  className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${currentTab === item.id ? 'bg-primary/10' : ''}`}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </header>
     </>

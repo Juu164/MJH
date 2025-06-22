@@ -54,6 +54,7 @@ export interface AppState {
     | 'contacts'
     | 'ideas'
     | 'documents'
-    | 'admin';
+    | 'admin'
+    | 'invoice';
   isDarkMode: boolean;
 }
