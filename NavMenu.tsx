@@ -35,8 +35,12 @@ export function NavMenu() {
     { id: 'availability' as const, label: 'Disponibilités' },
     { id: 'calendar' as const, label: 'Calendrier' },
     { id: 'concerts' as const, label: 'Concerts' },
+    { id: 'contacts' as const, label: 'Contacts' },
     ...(currentUser?.role === 'admin'
-      ? [{ id: 'invoice' as const, label: 'Administration' }]
+      ? [
+          { id: 'admin' as const, label: 'Administration' },
+          { id: 'invoice' as const, label: 'Factures' },
+        ]
       : []),
   ];
 
@@ -50,13 +54,35 @@ export function NavMenu() {
     <>
       {/* Desktop Navigation */}
       <nav className="hidden md:flex bg-white border-b border-gray-200 px-6 py-4 dark:bg-gray-800 dark:border-gray-700">
-        <div className="flex items-center space-x-8">
+        <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
             <Music className="w-8 h-8 text-primary" />
             <span className="text-2xl font-bold text-dark dark:text-gray-100">CalZik</span>
           </div>
-          
-          <div className="flex space-x-1">
+          <div className="relative">
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="p-2 text-gray-500 hover:text-primary hover:bg-primary/10 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-accent"
+              aria-label="Menu"
+            >
+              &#9776;
+            </button>
+            {menuOpen && (
+              <div className="absolute left-0 mt-2 w-60 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                {menuItems.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => { dispatch({ type: 'SET_TAB', payload: item.id }); setMenuOpen(false); }}
+                    className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${currentTab === item.id ? 'bg-primary/10' : ''}`}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="flex space-x-1 ml-2">
             {tabs.map((tab) => {
               const Icon = tab.icon;
               return (
@@ -96,26 +122,6 @@ export function NavMenu() {
           >
             <LogOut className="w-5 h-5" />
           </button>
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="p-2 text-gray-500 hover:text-primary hover:bg-primary/10 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-accent"
-            aria-label="Menu"
-          >
-            &#9776;
-          </button>
-          {menuOpen && (
-            <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
-              {menuItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => { dispatch({ type: 'SET_TAB', payload: item.id }); setMenuOpen(false); }}
-                  className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${currentTab === item.id ? 'bg-primary/10' : ''}`}
-                >
-                  {item.label}
-                </button>
-              ))}
-            </div>
-          )}
         </div>
       </nav>
 

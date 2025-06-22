@@ -6,5 +6,7 @@
   #invoice-preview {
     box-shadow: none;
     border: none;
+    width: 210mm;
+    margin: 0 auto;
   }
 }
