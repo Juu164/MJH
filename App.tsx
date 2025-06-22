@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { AppProvider, useApp } from './AppContext';
 import { EventsProvider } from './useEvents';
+import { InvoicesProvider } from './useInvoices';
 import { LoginForm } from './LoginForm';
 import { NavMenu } from './NavMenu';
 import { Dashboard } from './Dashboard';
@@ -73,12 +74,14 @@ function AppContent() {
 function App() {
   return (
     <EventsProvider>
-      <AppProvider>
-        <Routes>
-          <Route path="/concerts/:eventId" element={<AppContent />} />
-          <Route path="*" element={<AppContent />} />
-        </Routes>
-      </AppProvider>
+      <InvoicesProvider>
+        <AppProvider>
+          <Routes>
+            <Route path="/concerts/:eventId" element={<AppContent />} />
+            <Route path="*" element={<AppContent />} />
+          </Routes>
+        </AppProvider>
+      </InvoicesProvider>
     </EventsProvider>
   );
 }
