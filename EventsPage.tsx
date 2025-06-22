@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Calendar, MapPin, Edit, Trash2 } from 'lucide-react';
+import { Plus, Calendar, MapPin } from 'lucide-react';
 import { useEvents, Event as EventType } from './useEvents';
 import { useNavigate, useParams } from 'react-router-dom';
 import { EventFormModal } from './EventFormModal';
 
-export function ConcertManagement() {
-  const { events, deleteEvent } = useEvents();
+export function EventsPage() {
+  const { events } = useEvents();
   const navigate = useNavigate();
   const { eventId } = useParams<{ eventId?: string }>();
   const [showModal, setShowModal] = useState(false);
@@ -26,18 +26,6 @@ export function ConcertManagement() {
     setShowModal(false);
     navigate('/concerts');
   };
-
-  const handleEdit = (ev: EventType) => {
-    setEditingEvent(ev);
-    setShowModal(true);
-  };
-
-  const handleDelete = (id: string) => {
-    if (confirm('Êtes-vous sûr de vouloir supprimer ce concert ?')) {
-      deleteEvent(id);
-    }
-  };
-
 
   const getTypeBadge = (type: EventType['type']) => {
     const styles = {
@@ -94,31 +82,9 @@ export function ConcertManagement() {
                 isPast ? 'opacity-75' : ''
               }`}
             >
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-dark mb-2">
-                    {event.title}
-                  </h3>
-                  <div className="flex items-center space-x-2 mb-2">
-                    {getTypeBadge(event.type)}
-                  </div>
-                </div>
-                <div className="flex space-x-1">
-                  <button
-                    onClick={() => handleEdit(event)}
-                    className="p-2 text-gray-500 hover:text-primary hover:bg-primary/10 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-accent"
-                    title="Modifier"
-                  >
-                    <Edit className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(event.id)}
-                    className="p-2 text-gray-500 hover:text-primary hover:bg-primary/10 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-accent"
-                    title="Supprimer"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
+              <h3 className="text-lg font-semibold text-dark mb-2">{event.title}</h3>
+              <div className="flex items-center space-x-2 mb-4">
+                {getTypeBadge(event.type)}
               </div>
 
               <div className="space-y-3 text-sm text-gray-600">
