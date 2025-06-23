@@ -26,13 +26,9 @@ export function Header() {
           >
             &#9776;
           </button>
-          <Link
-            to="/"
-            className="flex items-center gap-2"
-            aria-label="Accueil"
-          >
-            <Music className="h-6 w-6 text-primary" />
-            <span className="font-heading text-lg">CalZik</span>
+          <Link to="/" className="logo-button" aria-label="Accueil">
+            <Music className="h-6 w-6 text-white" />
+            <span className="font-heading">CalZik</span>
           </Link>
           <nav className="hidden md:flex ml-6 space-x-4 font-semibold">
             <button
