@@ -118,36 +118,6 @@ export function AdminPanel() {
           </div>
           <h3 className="text-sm font-medium text-gray-600">Utilisateurs actifs</h3>
         </div>
-
-        <div className="bg-white rounded-xl p-3 border border-gray-100">
-          <div className="flex items-center justify-between mb-4">
-            <div className="p-3 bg-accent/20 rounded-lg">
-              <ShieldCheck className="w-6 h-6 text-accent" />
-            </div>
-            <span className="text-2xl font-bold text-dark">{stats.adminUsers}</span>
-          </div>
-          <h3 className="text-sm font-medium text-gray-600">Leaders</h3>
-        </div>
-
-        <div className="bg-white rounded-xl p-3 border border-gray-100">
-          <div className="flex items-center justify-between mb-4">
-            <div className="p-3 bg-accent/20 rounded-lg">
-              <Music className="w-6 h-6 text-accent" />
-            </div>
-            <span className="text-2xl font-bold text-dark">{stats.upcomingConcerts}</span>
-          </div>
-          <h3 className="text-sm font-medium text-gray-600">Prochains concerts</h3>
-        </div>
-
-        <div className="bg-white rounded-xl p-3 border border-gray-100">
-          <div className="flex items-center justify-between mb-4">
-            <div className="p-3 bg-accent/20 rounded-lg">
-              <Toggle className="w-6 h-6 text-accent" />
-            </div>
-            <span className="text-2xl font-bold text-dark">{contacts.length}</span>
-          </div>
-          <h3 className="text-sm font-medium text-gray-600">Contacts</h3>
-        </div>
       </div>
 
       {/* Users Management */}

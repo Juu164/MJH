@@ -9,7 +9,7 @@ import { Role } from './roles';
 import { NotificationsPage } from './NotificationsPage';
 const Dashboard = React.lazy(() => import('./Dashboard').then(m => ({ default: m.Dashboard })));
 const AvailabilityCalendar = React.lazy(() => import('./AvailabilityCalendar').then(m => ({ default: m.AvailabilityCalendar })));
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 const CalendarPage = React.lazy(() => import('./CalendarPage').then(m => ({ default: m.CalendarPage }))); 
 const EventsPage = React.lazy(() => import('./EventsPage').then(m => ({ default: m.EventsPage })));
 const InvoicePage = React.lazy(() => import('./InvoicePage').then(m => ({ default: m.InvoicePage })));
@@ -20,8 +20,9 @@ const DocumentsPage = React.lazy(() => import('./DocumentsPage').then(m => ({ de
 import { BackToTop } from './BackToTop';
 
 function AppContent() {
-  const { state } = useApp();
+  const { state, dispatch } = useApp();
   const { currentUser, currentTab, isDarkMode } = state;
+  const location = useLocation();
 
   useEffect(() => {
     const root = document.documentElement;
@@ -31,6 +32,14 @@ function AppContent() {
       root.classList.remove('dark');
     }
   }, [isDarkMode]);
+
+  useEffect(() => {
+    if (location.pathname === '/ressources/factures') {
+      dispatch({ type: 'SET_TAB', payload: 'invoice' });
+    } else if (location.pathname === '/') {
+      dispatch({ type: 'SET_TAB', payload: 'dashboard' });
+    }
+  }, [location.pathname, dispatch]);
 
   if (!currentUser) {
     return <LoginForm />;
@@ -82,6 +91,7 @@ function App() {
           <AppProvider>
             <Routes>
               <Route path="/concerts/:eventId" element={<AppContent />} />
+              <Route path="/ressources/factures" element={<AppContent />} />
               <Route path="/notifications" element={<NotificationsPage />} />
               <Route path="*" element={<AppContent />} />
             </Routes>
