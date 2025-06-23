@@ -7,9 +7,10 @@ import { LoginForm } from './LoginForm';
 import { Header } from './Header';
 import { Role } from './roles';
 import { NotificationsPage } from './NotificationsPage';
+import HomePage from './HomePage';
 const Dashboard = React.lazy(() => import('./Dashboard').then(m => ({ default: m.Dashboard })));
 const AvailabilityCalendar = React.lazy(() => import('./AvailabilityCalendar').then(m => ({ default: m.AvailabilityCalendar })));
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 const CalendarPage = React.lazy(() => import('./CalendarPage').then(m => ({ default: m.CalendarPage }))); 
 const EventsPage = React.lazy(() => import('./EventsPage').then(m => ({ default: m.EventsPage })));
 const InvoicePage = React.lazy(() => import('./InvoicePage').then(m => ({ default: m.InvoicePage })));
@@ -36,7 +37,7 @@ function AppContent() {
   useEffect(() => {
     if (location.pathname === '/ressources/factures') {
       dispatch({ type: 'SET_TAB', payload: 'invoice' });
-    } else if (location.pathname === '/') {
+    } else if (location.pathname === '/dashboard') {
       dispatch({ type: 'SET_TAB', payload: 'dashboard' });
     }
   }, [location.pathname, dispatch]);
@@ -90,11 +91,12 @@ function App() {
         <InvoicesProvider>
           <AppProvider>
             <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/dashboard" element={<AppContent />} />
               <Route path="/concerts/:eventId" element={<AppContent />} />
               <Route path="/ressources/factures" element={<AppContent />} />
               <Route path="/notifications" element={<NotificationsPage />} />
-              <Route path="/" element={<AppContent />} />
-              <Route path="*" element={<AppContent />} />
+              <Route path="*" element={<Navigate to="/" />} />
             </Routes>
             <NotificationList />
           </AppProvider>
