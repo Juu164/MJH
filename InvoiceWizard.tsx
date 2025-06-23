@@ -139,13 +139,79 @@ export function InvoiceWizard() {
         </div>
       )}
       {step === 5 && (
-        <div className="space-y-2">
+        <div className="space-y-4">
           <h2 className="font-semibold">Aperçu</h2>
-          <div>Prestataire: {form.providerName}</div>
-          <div>Client: {form.clientName}</div>
-          <div>Prestation: {form.serviceTitle} - {form.location}</div>
-          <div>Montant TTC: {form.amountTTC} €</div>
-          <button type="button" onClick={() => window.print()} className="mt-2 bg-primary text-white px-4 py-2 rounded">Imprimer</button>
+          <div id="invoice-printable" className="p-4 bg-white border rounded shadow space-y-4">
+            <div className="flex justify-between items-start">
+              <div className="text-2xl font-bold">CalZik</div>
+              <div className="text-right text-sm space-y-1">
+                <div>Date : {form.serviceDate}</div>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-6 text-sm">
+              <div>
+                <h3 className="font-semibold mb-1">Prestataire</h3>
+                <div>{form.providerName}</div>
+                <div>{form.providerAddress}</div>
+                {form.providerSiret && <div>SIRET : {form.providerSiret}</div>}
+                {form.providerVat && <div>TVA : {form.providerVat}</div>}
+              </div>
+              <div>
+                <h3 className="font-semibold mb-1">Client</h3>
+                <div>{form.clientName}</div>
+                <div>{form.clientAddress}</div>
+                {form.clientSiret && <div>SIRET : {form.clientSiret}</div>}
+                {form.clientVat && <div>TVA : {form.clientVat}</div>}
+              </div>
+            </div>
+            <table className="w-full text-sm border mt-4">
+              <thead>
+                <tr className="bg-gray-100">
+                  <th className="p-2 text-left">Prestation</th>
+                  <th className="p-2 text-right">Montant HT</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="p-2">
+                    {form.serviceTitle} - {form.location}
+                  </td>
+                  <td className="p-2 text-right">{form.amountHT} €</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td className="p-2 text-right font-semibold">Sous-total</td>
+                  <td className="p-2 text-right">{form.amountHT} €</td>
+                </tr>
+                <tr>
+                  <td className="p-2 text-right">TVA {form.vatRate}%</td>
+                  <td className="p-2 text-right">
+                    {(
+                      parseFloat(form.amountTTC || '0') -
+                      parseFloat(form.amountHT || '0')
+                    ).toFixed(2)}{' '}
+                    €
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-2 text-right font-bold">Total TTC</td>
+                  <td className="p-2 text-right font-bold">{form.amountTTC} €</td>
+                </tr>
+              </tfoot>
+            </table>
+            <div className="text-xs mt-4">
+              Conditions de paiement : règlement à réception.<br />
+              Mentions légales : association loi 1901.
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => window.print()}
+            className="mt-2 bg-primary text-white px-4 py-2 rounded"
+          >
+            Imprimer
+          </button>
         </div>
       )}
       <div className="flex justify-between pt-4">

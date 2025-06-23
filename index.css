@@ -2,11 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+#invoice-printable {
+  max-width: 210mm;
+  margin: 0 auto;
+}
+
 @media print {
-  #invoice-preview {
-    box-shadow: none;
-    border: none;
+  body * {
+    visibility: hidden;
+  }
+  #invoice-printable, #invoice-printable * {
+    visibility: visible;
+  }
+  #invoice-printable {
+    position: absolute;
+    left: 0;
+    top: 0;
     width: 210mm;
-    margin: 0 auto;
   }
 }

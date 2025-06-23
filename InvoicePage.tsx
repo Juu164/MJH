@@ -26,7 +26,7 @@ export function InvoicePage() {
           </thead>
           <tbody>
             {unpaid.map(inv => (
-              <tr key={inv.id} className="border-t">
+              <tr key={inv.id} id={`inv-${inv.id}`} className="border-t">
                 <td className="p-2">{inv.number}</td>
                 <td className="p-2">{inv.clientName}</td>
                 <td className="p-2">{inv.amountTTC} €</td>
@@ -67,7 +67,7 @@ export function InvoicePage() {
           </thead>
           <tbody>
             {paid.map(inv => (
-              <tr key={inv.id} className="border-t">
+              <tr key={inv.id} id={`inv-${inv.id}`} className="border-t">
                 <td className="p-2">{inv.number}</td>
                 <td className="p-2">{inv.clientName}</td>
                 <td className="p-2">{inv.amountTTC} €</td>
