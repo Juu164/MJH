@@ -28,5 +28,17 @@ La page *Factures* reste accessible mais n’apparaît plus dans le menu.
 
 ## Factures et rappels
 
-Les factures créées sont conservées dans le stockage local du navigateur. Un rappel s’affiche automatiquement lorsqu’une facture non acquittée dépasse 30 jours après la date de prestation. Marquer une facture comme payée supprime la notification correspondante.
+Les factures créées sont conservées dans l'IndexedDB du navigateur (via localForage). Un rappel s’affiche automatiquement lorsqu’une facture non acquittée dépasse 30 jours après la date de prestation. Marquer une facture comme payée supprime la notification correspondante.
+
+## Tests
+
+L'application utilise Vitest.
+
+```bash
+npm test
+```
+
+## Progressive Web App
+
+Une configuration PWA permet d'installer l'application pour un accès hors-ligne.
 

@@ -3,6 +3,7 @@ import { Plus, Calendar, MapPin } from 'lucide-react';
 import { useEvents, Event as EventType } from './useEvents';
 import { useNavigate, useParams } from 'react-router-dom';
 import { EventFormModal } from './EventFormModal';
+import { FixedSizeList as List } from 'react-window';
 
 export function EventsPage() {
   const { events } = useEvents();
@@ -71,45 +72,52 @@ export function EventsPage() {
       </div>
 
       {/* Events List */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-        {sortedEvents.map((event) => {
+      <List
+        height={600}
+        width="100%"
+        itemCount={sortedEvents.length}
+        itemSize={170}
+      >
+        {({ index, style }) => {
+          const event = sortedEvents[index];
           const isPast = new Date(event.date) < new Date();
-
           return (
-            <div
-              key={event.id}
-              className={`bg-white rounded-xl p-3 border border-gray-100 hover:shadow-lg transition-shadow ${
-                isPast ? 'opacity-75' : ''
-              }`}
-            >
-              <h3 className="text-lg font-semibold text-dark mb-2">{event.title}</h3>
-              <div className="flex items-center space-x-2 mb-4">
-                {getTypeBadge(event.type)}
-              </div>
-
-              <div className="space-y-3 text-sm text-gray-600">
-                <div className="flex items-center">
-                  <Calendar className="w-4 h-4 mr-2" />
-                  {new Date(event.date).toLocaleDateString('fr-FR', {
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                  })} à {event.time}
+            <div style={style} className="p-2">
+              <div
+                className={`bg-white rounded-xl p-3 border border-gray-100 hover:shadow-lg transition-shadow ${
+                  isPast ? 'opacity-75' : ''
+                }`}
+              >
+                <h3 className="text-lg font-semibold text-dark mb-2">
+                  {event.title}
+                </h3>
+                <div className="flex items-center space-x-2 mb-4">
+                  {getTypeBadge(event.type)}
                 </div>
-
-                <div className="flex items-center">
-                  <MapPin className="w-4 h-4 mr-2" />
-                  {event.location}
+                <div className="space-y-3 text-sm text-gray-600">
+                  <div className="flex items-center">
+                    <Calendar className="w-4 h-4 mr-2" />
+                    {new Date(event.date).toLocaleDateString('fr-FR', {
+                      weekday: 'long',
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    })}{' '}
+                    à {event.time}
+                  </div>
+                  <div className="flex items-center">
+                    <MapPin className="w-4 h-4 mr-2" />
+                    {event.location}
+                  </div>
                 </div>
               </div>
             </div>
           );
-        })}
+        }}
+      </List>
       {showModal && (
         <EventFormModal event={editingEvent || undefined} onClose={resetForm} />
       )}
-      </div>
 
     </div>
   );

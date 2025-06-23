@@ -1,20 +1,26 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Music, Lock, Mail } from 'lucide-react';
 import { useApp } from './AppContext';
+import { useForm } from 'react-hook-form';
+import { Button } from './Button';
+
+interface LoginFields {
+  email: string;
+  password: string;
+}
 
 export function LoginForm() {
   const { state, dispatch } = useApp();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFields>();
+  const [error, setError] = React.useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Mock authentication
-    const user = state.users.find(u => u.email === email);
-    
-    if (user && password) {
+  const onSubmit = (data: LoginFields) => {
+    const user = state.users.find(u => u.email === data.email);
+    if (user && data.password) {
       dispatch({ type: 'LOGIN', payload: user });
       setError('');
     } else {
@@ -33,7 +39,7 @@ export function LoginForm() {
           <p className="text-gray-600">Connectez-vous à votre espace</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Email
@@ -42,11 +48,9 @@ export function LoginForm() {
               <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
               <input
                 type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent transition-all"
                 placeholder="votre@email.fr"
-                required
+                {...register('email', { required: true })}
               />
             </div>
           </div>
@@ -59,11 +63,9 @@ export function LoginForm() {
               <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
               <input
                 type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent transition-all"
                 placeholder="••••••••"
-                required
+                {...register('password', { required: true })}
               />
             </div>
           </div>
@@ -74,12 +76,9 @@ export function LoginForm() {
             </div>
           )}
 
-          <button
-            type="submit"
-            className="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors"
-          >
+          <Button type="submit" className="w-full py-3">
             Se connecter
-          </button>
+          </Button>
         </form>
 
         <div className="mt-6 text-center">

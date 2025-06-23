@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { useNotifications } from './useNotifications';
+import { getItem, setItem } from './storage';
 
 export interface Invoice {
   id: string;
@@ -34,20 +35,23 @@ const InvoicesContext = createContext<InvoicesCtx | undefined>(undefined);
 
 function generateNumber() {
   const year = new Date().getFullYear();
-  const seq = parseInt(localStorage.getItem('invoiceSeq') || '0', 10) + 1;
+  const seqStr = localStorage.getItem('invoiceSeq');
+  const seq = (seqStr ? parseInt(seqStr, 10) : 0) + 1;
   localStorage.setItem('invoiceSeq', seq.toString());
   return `${year}-${String(seq).padStart(4, '0')}`;
 }
 
 export function InvoicesProvider({ children }: { children: ReactNode }) {
-  const [invoices, setInvoices] = useState<Invoice[]>(() => {
-    const stored = localStorage.getItem('invoices');
-    return stored ? JSON.parse(stored) : [];
-  });
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+  useEffect(() => {
+    getItem<Invoice[]>('invoices').then(data => {
+      if (data) setInvoices(data);
+    });
+  }, []);
   const { add, remove } = useNotifications();
 
   useEffect(() => {
-    localStorage.setItem('invoices', JSON.stringify(invoices));
+    setItem('invoices', invoices);
     invoices.forEach(inv => {
       const notifId = `invoice-${inv.id}`;
       const due = new Date(inv.serviceDate);
