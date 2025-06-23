@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { useApp } from './AppContext';
+import { Link } from 'react-router-dom';
 import { useOutsideClick } from './useOutsideClick';
 
 interface Props {
@@ -37,6 +38,13 @@ export function ResourcesMenu({ open, onClose }: Props) {
       >
         Pense-Bête
       </button>
+      <Link
+        to="/ressources/factures"
+        onClick={onClose}
+        className="block w-full text-left px-2 py-1 hover:bg-primary/5 rounded"
+      >
+        Facturation
+      </Link>
     </div>
   );
 }

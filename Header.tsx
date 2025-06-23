@@ -27,19 +27,21 @@ export function Header() {
             &#9776;
           </button>
           <Music className="w-6 h-6 text-primary" />
-          <span className="font-bold text-dark dark:text-gray-100">CalZik</span>
+          <Link to="/" className="font-bold text-dark dark:text-gray-100">
+            CalZik
+          </Link>
           <nav className="hidden md:flex ml-6 space-x-4 font-semibold">
-            <button
-              onClick={() => dispatch({ type: 'SET_TAB', payload: 'dashboard' })}
-              className={`hover:text-primary ${state.currentTab === 'dashboard' ? 'text-primary' : ''}`}
-            >
-              Tableau de bord
-            </button>
             <button
               onClick={() => dispatch({ type: 'SET_TAB', payload: 'calendar' })}
               className={`hover:text-primary ${state.currentTab === 'calendar' ? 'text-primary' : ''}`}
             >
               Calendrier
+            </button>
+            <button
+              onClick={() => dispatch({ type: 'SET_TAB', payload: 'contacts' })}
+              className={`hover:text-primary ${state.currentTab === 'contacts' ? 'text-primary' : ''}`}
+            >
+              Contacts
             </button>
             <div className="relative">
               <button
@@ -59,12 +61,6 @@ export function Header() {
               className={`hover:text-primary ${state.currentTab === 'concerts' ? 'text-primary' : ''}`}
             >
               Concerts
-            </button>
-            <button
-              onClick={() => dispatch({ type: 'SET_TAB', payload: 'contacts' })}
-              className={`hover:text-primary ${state.currentTab === 'contacts' ? 'text-primary' : ''}`}
-            >
-              Contacts
             </button>
             {state.currentUser?.role === 'leader' && (
               <button
