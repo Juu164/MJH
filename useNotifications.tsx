@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
+import { getItem, setItem } from './storage';
 
 export interface Notification {
   id: string;
@@ -20,24 +21,16 @@ interface NotificationsCtx {
 const NotificationsContext = createContext<NotificationsCtx | undefined>(undefined);
 
 export function NotificationsProvider({ children }: { children: ReactNode }) {
-  const [notifications, setNotifications] = useState<Notification[]>(() => {
-    const stored = localStorage.getItem('notifications');
-    if (!stored) return [];
-    try {
-      const data = JSON.parse(stored) as Array<Partial<Notification>>;
-      return data.map(n => ({
-        id: n.id,
-        message: n.message,
-        date: n.date || new Date().toISOString(),
-        read: n.read || false,
-      }));
-    } catch {
-      return [];
-    }
-  });
+  const [notifications, setNotifications] = useState<Notification[]>([]);
 
   useEffect(() => {
-    localStorage.setItem('notifications', JSON.stringify(notifications));
+    getItem<Notification[]>('notifications').then(data => {
+      if (data) setNotifications(data);
+    });
+  }, []);
+
+  useEffect(() => {
+    setItem('notifications', notifications);
   }, [notifications]);
 
   const add = (notification: Notification) => {
