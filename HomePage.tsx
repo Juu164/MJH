@@ -1,26 +1,28 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Calendar, ListChecks, CreditCard } from 'lucide-react';
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { Calendar, ListChecks, CreditCard } from "lucide-react";
 
 export function HomePage() {
   const features = [
     {
       icon: Calendar,
-      title: 'Planification',
+      title: "Planification",
       desc: "Organisez facilement vos répétitions et concerts avec un agenda partagé.",
     },
     {
       icon: ListChecks,
-      title: 'Calendrier',
+      title: "Calendrier",
       desc: "Suivez tous les événements importants de votre groupe en un coup d'œil.",
     },
     {
       icon: CreditCard,
-      title: 'Facturation',
+      title: "Facturation",
       desc: "Générez vos factures et suivez les paiements sans effort.",
     },
   ];
+
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
@@ -36,12 +38,12 @@ export function HomePage() {
         <p className="text-xl md:text-2xl mb-8 max-w-2xl">
           Gérez vos concerts, disponibilités et factures au même endroit.
         </p>
-        <Link
-          to="/calendar"
+        <button
+          onClick={() => navigate("/calendar")}
           className="px-6 py-3 rounded-full bg-primary hover:bg-primary/90 transition-colors"
         >
           Découvrir le calendrier
-        </Link>
+        </button>
       </motion.section>
 
       <section className="py-16 bg-gray-950">
@@ -49,7 +51,7 @@ export function HomePage() {
           {features.map(({ icon: Icon, title, desc }) => (
             <motion.div
               key={title}
-              whileHover={{ boxShadow: '0 0 15px rgba(255,255,255,0.6)' }}
+              whileHover={{ boxShadow: "0 0 15px rgba(255,255,255,0.6)" }}
               className="p-6 bg-gray-800 rounded-xl space-y-4"
             >
               <Icon className="w-10 h-10 mx-auto text-accent" />
