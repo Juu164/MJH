@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Plus, Users, Edit, Trash2 } from 'lucide-react';
 import { useApp } from './AppContext';
 import { Availability } from '../types';
-import { Role } from './roles';
 import { MemberAvailabilityRow, ConfirmationsState } from './MemberAvailabilityRow';
 
 export function AvailabilityCalendar() {
@@ -129,15 +128,13 @@ export function AvailabilityCalendar() {
                 >
                   <Edit className="w-4 h-4" />
                 </button>
-                {currentUser?.role === Role.Leader && (
-                  <button
-                    onClick={() => dispatch({ type: 'DELETE_AVAILABILITY', payload: slot.id })}
-                    className="p-2 text-gray-500 hover:text-primary hover:bg-primary/10 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-accent"
-                    title="Supprimer"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                )}
+                <button
+                  onClick={() => dispatch({ type: 'DELETE_AVAILABILITY', payload: slot.id })}
+                  className="p-2 text-gray-500 hover:text-primary hover:bg-primary/10 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-accent"
+                  title="Supprimer"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
               </div>
             </div>
           ))}
@@ -147,7 +144,7 @@ export function AvailabilityCalendar() {
 
 
       {/* Legend */}
-      <div className="bg-white rounded-xl p-3 border border-gray-100 mb-6">
+      <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100 mb-6">
         <h3 className="text-lg font-semibold text-dark mb-4">Légende</h3>
         <div className="flex flex-wrap gap-4">
           <div className="flex items-center space-x-2">
@@ -174,7 +171,7 @@ export function AvailabilityCalendar() {
       </div>
 
       {/* Calendar Grid */}
-      <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <tbody className="divide-y divide-gray-200">
@@ -234,18 +231,16 @@ export function AvailabilityCalendar() {
                                 >
                                   <Edit className="w-4 h-4" />
                                 </button>
-                                {currentUser?.role === Role.Leader && (
-                                  <button
-                                    onClick={() => {
-                                      const updated = (dateSlots[date] || []).filter((_, i) => i !== idx);
-                                      setDateSlots({ ...dateSlots, [date]: updated });
-                                    }}
-                                    className="p-1 text-gray-500 hover:text-primary"
-                                    title="Supprimer"
-                                  >
-                                    <Trash2 className="w-4 h-4" />
-                                  </button>
-                                )}
+                                <button
+                                  onClick={() => {
+                                    const updated = (dateSlots[date] || []).filter((_, i) => i !== idx);
+                                    setDateSlots({ ...dateSlots, [date]: updated });
+                                  }}
+                                  className="p-1 text-gray-500 hover:text-primary"
+                                  title="Supprimer"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
                               </span>
                             </td>
                           </tr>
@@ -296,7 +291,7 @@ export function AvailabilityCalendar() {
       </div>
 
       {/* Detailed view for selected date */}
-      <div className="mt-8 bg-white rounded-xl p-3 border border-gray-100">
+      <div className="mt-8 bg-white rounded-xl p-6 shadow-md border border-gray-100">
         <h3 className="text-lg font-semibold text-dark mb-4 flex items-center">
           <Users className="w-5 h-5 mr-2 text-primary" />
           Détail des disponibilités
@@ -319,7 +314,7 @@ export function AvailabilityCalendar() {
 
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl p-3 w-full max-w-md">
+          <div className="bg-white rounded-xl p-6 w-full max-w-md">
             <h2 className="text-2xl font-bold text-dark mb-6">
               {editingAvailability ? 'Modifier la disponibilité' : 'Ajouter une disponibilité'}
             </h2>

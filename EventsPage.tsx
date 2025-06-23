@@ -78,7 +78,7 @@ export function EventsPage() {
           return (
             <div
               key={event.id}
-              className={`bg-white rounded-xl p-3 border border-gray-100 hover:shadow-lg transition-shadow ${
+              className={`bg-white rounded-xl p-6 shadow-md border border-gray-100 hover:shadow-lg transition-shadow ${
                 isPast ? 'opacity-75' : ''
               }`}
             >

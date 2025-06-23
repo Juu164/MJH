@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useReducer, ReactNode } from 'react';
 import { AppState, User, Availability, Concert, Contact } from '../types';
-import { Role } from './roles';
 
 type AppAction =
   | { type: 'LOGIN'; payload: User }
@@ -20,10 +19,10 @@ type AppAction =
 
 // Mock data
 const mockUsers: User[] = [
-  { id: '1', email: 'admin@calzik.fr', name: 'Marie Dupont', instrument: 'Guitare', role: Role.Leader, isActive: true },
-  { id: '2', email: 'pierre@calzik.fr', name: 'Pierre Martin', instrument: 'Batterie', role: Role.Member, isActive: true },
-  { id: '3', email: 'sophie@calzik.fr', name: 'Sophie Bernard', instrument: 'Basse', role: Role.Member, isActive: true },
-  { id: '4', email: 'thomas@calzik.fr', name: 'Thomas Petit', instrument: 'Clavier', role: Role.Member, isActive: true },
+  { id: '1', email: 'admin@calzik.fr', name: 'Marie Dupont', instrument: 'Guitare', role: 'admin', isActive: true },
+  { id: '2', email: 'pierre@calzik.fr', name: 'Pierre Martin', instrument: 'Batterie', role: 'member', isActive: true },
+  { id: '3', email: 'sophie@calzik.fr', name: 'Sophie Bernard', instrument: 'Basse', role: 'member', isActive: true },
+  { id: '4', email: 'thomas@calzik.fr', name: 'Thomas Petit', instrument: 'Clavier', role: 'member', isActive: true },
 ];
 
 const mockContacts: Contact[] = [
