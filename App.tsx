@@ -1,24 +1,44 @@
-import React, { useEffect } from 'react';
-import { AppProvider, useApp } from './AppContext';
-import { EventsProvider } from './useEvents';
-import { InvoicesProvider } from './useInvoices';
-import { NotificationsProvider, NotificationList } from './useNotifications';
-import { LoginForm } from './LoginForm';
-import { Header } from './Header';
-import { Role } from './roles';
-import { NotificationsPage } from './NotificationsPage';
-import HomePage from './HomePage';
-const Dashboard = React.lazy(() => import('./Dashboard').then(m => ({ default: m.Dashboard })));
-const AvailabilityCalendar = React.lazy(() => import('./AvailabilityCalendar').then(m => ({ default: m.AvailabilityCalendar })));
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-const CalendarPage = React.lazy(() => import('./CalendarPage').then(m => ({ default: m.CalendarPage }))); 
-const EventsPage = React.lazy(() => import('./EventsPage').then(m => ({ default: m.EventsPage })));
-const InvoicePage = React.lazy(() => import('./InvoicePage').then(m => ({ default: m.InvoicePage })));
-const ContactDirectory = React.lazy(() => import('./ContactDirectory').then(m => ({ default: m.ContactDirectory })));
-const AdminPanel = React.lazy(() => import('./AdminPanel').then(m => ({ default: m.AdminPanel })));
-const IdeaBoardPage = React.lazy(() => import('./IdeaBoardPage').then(m => ({ default: m.IdeaBoardPage })));
-const DocumentsPage = React.lazy(() => import('./DocumentsPage').then(m => ({ default: m.DocumentsPage })));
-import { BackToTop } from './BackToTop';
+import React, { useEffect } from "react";
+import { AppProvider, useApp } from "./AppContext";
+import { EventsProvider } from "./useEvents";
+import { InvoicesProvider } from "./useInvoices";
+import { NotificationsProvider, NotificationList } from "./useNotifications";
+import { LoginForm } from "./LoginForm";
+import { Header } from "./Header";
+import { Role } from "./roles";
+import { NotificationsPage } from "./NotificationsPage";
+import HomePage from "./HomePage";
+const Dashboard = React.lazy(() =>
+  import("./Dashboard").then((m) => ({ default: m.Dashboard })),
+);
+const AvailabilityCalendar = React.lazy(() =>
+  import("./AvailabilityCalendar").then((m) => ({
+    default: m.AvailabilityCalendar,
+  })),
+);
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+const CalendarPage = React.lazy(() =>
+  import("./CalendarPage").then((m) => ({ default: m.CalendarPage })),
+);
+const EventsPage = React.lazy(() =>
+  import("./EventsPage").then((m) => ({ default: m.EventsPage })),
+);
+const InvoicePage = React.lazy(() =>
+  import("./InvoicePage").then((m) => ({ default: m.InvoicePage })),
+);
+const ContactDirectory = React.lazy(() =>
+  import("./ContactDirectory").then((m) => ({ default: m.ContactDirectory })),
+);
+const AdminPanel = React.lazy(() =>
+  import("./AdminPanel").then((m) => ({ default: m.AdminPanel })),
+);
+const IdeaBoardPage = React.lazy(() =>
+  import("./IdeaBoardPage").then((m) => ({ default: m.IdeaBoardPage })),
+);
+const DocumentsPage = React.lazy(() =>
+  import("./DocumentsPage").then((m) => ({ default: m.DocumentsPage })),
+);
+import { BackToTop } from "./BackToTop";
 
 function AppContent() {
   const { state, dispatch } = useApp();
@@ -28,17 +48,17 @@ function AppContent() {
   useEffect(() => {
     const root = document.documentElement;
     if (isDarkMode) {
-      root.classList.add('dark');
+      root.classList.add("dark");
     } else {
-      root.classList.remove('dark');
+      root.classList.remove("dark");
     }
   }, [isDarkMode]);
 
   useEffect(() => {
-    if (location.pathname === '/ressources/factures') {
-      dispatch({ type: 'SET_TAB', payload: 'invoice' });
-    } else if (location.pathname === '/dashboard') {
-      dispatch({ type: 'SET_TAB', payload: 'dashboard' });
+    if (location.pathname === "/ressources/factures") {
+      dispatch({ type: "SET_TAB", payload: "invoice" });
+    } else if (location.pathname === "/dashboard") {
+      dispatch({ type: "SET_TAB", payload: "dashboard" });
     }
   }, [location.pathname, dispatch]);
 
@@ -48,23 +68,27 @@ function AppContent() {
 
   const renderCurrentTab = () => {
     switch (currentTab) {
-      case 'dashboard':
+      case "dashboard":
         return <Dashboard />;
-      case 'availability':
+      case "availability":
         return <AvailabilityCalendar />;
-      case 'calendar':
+      case "calendar":
         return <CalendarPage />;
-      case 'concerts':
+      case "concerts":
         return <EventsPage />;
-      case 'contacts':
+      case "contacts":
         return <ContactDirectory />;
-      case 'ideas':
+      case "ideas":
         return <IdeaBoardPage />;
-      case 'documents':
+      case "documents":
         return <DocumentsPage />;
-      case 'admin':
-        return currentUser.role === Role.Leader ? <AdminPanel /> : <Dashboard />;
-      case 'invoice':
+      case "admin":
+        return currentUser.role === Role.Leader ? (
+          <AdminPanel />
+        ) : (
+          <Dashboard />
+        );
+      case "invoice":
         return <InvoicePage />;
       default:
         return <Dashboard />;
@@ -73,7 +97,6 @@ function AppContent() {
 
   return (
     <div className="min-h-screen bg-light dark:bg-dark dark:text-light">
-      <Header />
       <main className="pb-20 md:pb-0">
         <React.Suspense fallback={<div className="p-4">Chargement...</div>}>
           {renderCurrentTab()}
@@ -90,16 +113,31 @@ function App() {
       <EventsProvider>
         <InvoicesProvider>
           <AppProvider>
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/calendar" element={<CalendarPage />} />
-              <Route path="/dashboard" element={<AppContent />} />
-              <Route path="/concerts/:eventId" element={<AppContent />} />
-              <Route path="/ressources/factures" element={<AppContent />} />
-              <Route path="/notifications" element={<NotificationsPage />} />
-              <Route path="*" element={<Navigate to="/" />} />
-            </Routes>
-            <NotificationList />
+            <div className="min-h-screen bg-light dark:bg-dark dark:text-light">
+              <Header />
+              <main className="pb-20 md:pb-0">
+                <React.Suspense
+                  fallback={<div className="p-4">Chargement...</div>}
+                >
+                  <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/calendar" element={<CalendarPage />} />
+                    <Route path="/dashboard" element={<AppContent />} />
+                    <Route path="/concerts/:eventId" element={<AppContent />} />
+                    <Route
+                      path="/ressources/factures"
+                      element={<AppContent />}
+                    />
+                    <Route
+                      path="/notifications"
+                      element={<NotificationsPage />}
+                    />
+                    <Route path="*" element={<Navigate to="/" />} />
+                  </Routes>
+                </React.Suspense>
+                <NotificationList />
+              </main>
+            </div>
           </AppProvider>
         </InvoicesProvider>
       </EventsProvider>
