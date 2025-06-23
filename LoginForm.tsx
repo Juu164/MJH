@@ -1,5 +1,6 @@
 import React from 'react';
 import { Music, Lock, Mail } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useApp } from './AppContext';
 import { useForm } from 'react-hook-form';
 import { Button } from './Button';
@@ -32,10 +33,15 @@ export function LoginForm() {
     <div className="min-h-screen bg-gradient-to-br from-primary to-accent flex items-center justify-center px-4">
       <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-full mb-4">
-            <Music className="w-8 h-8 text-white" />
-          </div>
-          <h1 className="text-3xl font-bold text-dark mb-2">CalZik</h1>
+          <Link
+            to="/"
+            className="inline-flex flex-col items-center justify-center"
+          >
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-full mb-4">
+              <Music className="w-8 h-8 text-white" />
+            </div>
+            <h1 className="text-3xl font-bold text-dark mb-2">CalZik</h1>
+          </Link>
           <p className="text-gray-600">Connectez-vous à votre espace</p>
         </div>
 
