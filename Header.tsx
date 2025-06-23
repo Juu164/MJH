@@ -26,9 +26,12 @@ export function Header() {
           >
             &#9776;
           </button>
-          <Music className="w-6 h-6 text-primary" />
-          <Link to="/" className="font-bold text-dark dark:text-gray-100">
-            CalZik
+          <Link
+            to="/"
+            className="flex items-center space-x-2 font-bold text-dark dark:text-gray-100"
+          >
+            <Music className="w-6 h-6 text-primary" />
+            <span>CalZik</span>
           </Link>
           <nav className="hidden md:flex ml-6 space-x-4 font-semibold">
             <button
@@ -43,6 +46,12 @@ export function Header() {
             >
               Contacts
             </button>
+            <button
+              onClick={() => dispatch({ type: 'SET_TAB', payload: 'concerts' })}
+              className={`hover:text-primary ${state.currentTab === 'concerts' ? 'text-primary' : ''}`}
+            >
+              Concerts
+            </button>
             <div className="relative">
               <button
                 onClick={() => setShowResources(s => !s)}
@@ -54,14 +63,11 @@ export function Header() {
               >
                 Ressources &#9662;
               </button>
-              <ResourcesMenu open={showResources} onClose={() => setShowResources(false)} />
+              <ResourcesMenu
+                open={showResources}
+                onClose={() => setShowResources(false)}
+              />
             </div>
-            <button
-              onClick={() => dispatch({ type: 'SET_TAB', payload: 'concerts' })}
-              className={`hover:text-primary ${state.currentTab === 'concerts' ? 'text-primary' : ''}`}
-            >
-              Concerts
-            </button>
             {state.currentUser?.role === 'leader' && (
               <button
                 onClick={() => dispatch({ type: 'SET_TAB', payload: 'admin' })}

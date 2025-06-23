@@ -16,11 +16,15 @@ export function NavMenu({ open, onClose }: Props) {
   const menuItems = [
     { id: 'calendar' as const, label: 'Calendrier' },
     { id: 'contacts' as const, label: 'Contacts' },
+    { id: 'concerts' as const, label: 'Concerts' },
     { id: 'documents' as const, label: 'Stockage de fichier' },
     { id: 'ideas' as const, label: 'Pense-Bête' },
-    ...(currentUser?.role === 'leader' ? [{ id: 'invoice' as const, label: 'Factures' }] : []),
-    { id: 'concerts' as const, label: 'Concerts' },
-    ...(currentUser?.role === 'leader' ? [{ id: 'admin' as const, label: 'Administration' }] : []),
+    ...(currentUser?.role === 'leader'
+      ? [{ id: 'invoice' as const, label: 'Factures' }]
+      : []),
+    ...(currentUser?.role === 'leader'
+      ? [{ id: 'admin' as const, label: 'Administration' }]
+      : []),
   ];
 
   if (!open) return null;
