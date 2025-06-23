@@ -26,3 +26,22 @@
   width: 300px;
   height: 200px;
 }
+
+/* Stylish button for CalZik logo */
+.logo-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.75rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #ffffff;
+  background-image: linear-gradient(to right, #0077B6, #C04A00);
+  border-radius: 9999px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.15s;
+}
+
+.logo-button:hover {
+  transform: scale(1.05);
+}
