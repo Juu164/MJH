@@ -28,10 +28,11 @@ export function Header() {
           </button>
           <Link
             to="/"
-            className="flex items-center space-x-2 font-bold text-dark dark:text-gray-100"
+            className="flex items-center gap-2"
+            aria-label="Accueil"
           >
-            <Music className="w-6 h-6 text-primary" />
-            <span>CalZik</span>
+            <Music className="h-6 w-6 text-primary" />
+            <span className="font-heading text-lg">CalZik</span>
           </Link>
           <nav className="hidden md:flex ml-6 space-x-4 font-semibold">
             <button

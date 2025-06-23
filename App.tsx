@@ -93,6 +93,7 @@ function App() {
               <Route path="/concerts/:eventId" element={<AppContent />} />
               <Route path="/ressources/factures" element={<AppContent />} />
               <Route path="/notifications" element={<NotificationsPage />} />
+              <Route path="/" element={<AppContent />} />
               <Route path="*" element={<AppContent />} />
             </Routes>
             <NotificationList />
