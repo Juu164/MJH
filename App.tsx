@@ -92,6 +92,7 @@ function App() {
           <AppProvider>
             <Routes>
               <Route path="/" element={<HomePage />} />
+              <Route path="/calendar" element={<CalendarPage />} />
               <Route path="/dashboard" element={<AppContent />} />
               <Route path="/concerts/:eventId" element={<AppContent />} />
               <Route path="/ressources/factures" element={<AppContent />} />
