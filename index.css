@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  @apply font-body text-textBase bg-background;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  @apply font-heading;
+}
+
 #invoice-printable {
   max-width: 210mm;
   margin: 0 auto;
@@ -13,6 +21,8 @@
   }
   #invoice-printable, #invoice-printable * {
     visibility: visible;
+    font-family: 'Inter', sans-serif;
+    color: #000;
   }
   #invoice-printable {
     position: absolute;
