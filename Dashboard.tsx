@@ -1,5 +1,7 @@
 import React from 'react';
 import { Calendar, Music, Users, TrendingUp, Clock, MapPin } from 'lucide-react';
+import { NeonCard } from './NeonCard';
+import { NeonBadge } from './NeonBadge';
 import { useApp } from './AppContext';
 
 export function Dashboard() {
@@ -39,7 +41,7 @@ export function Dashboard() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white rounded-xl p-3 border border-gray-100">
+        <NeonCard>
           <div className="flex items-center justify-between mb-4">
             <div className="p-3 bg-primary/10 rounded-lg">
               <Users className="w-6 h-6 text-primary" />
@@ -47,9 +49,9 @@ export function Dashboard() {
             <span className="text-2xl font-bold text-dark">{totalMembers}</span>
           </div>
           <h3 className="text-sm font-medium text-gray-600">Musiciens actifs</h3>
-        </div>
+        </NeonCard>
 
-        <div className="bg-white rounded-xl p-3 border border-gray-100">
+        <NeonCard>
           <div className="flex items-center justify-between mb-4">
             <div className="p-3 bg-accent/20 rounded-lg">
               <Music className="w-6 h-6 text-accent" />
@@ -57,9 +59,9 @@ export function Dashboard() {
             <span className="text-2xl font-bold text-dark">{confirmedConcerts}</span>
           </div>
           <h3 className="text-sm font-medium text-gray-600">Concerts confirmés</h3>
-        </div>
+        </NeonCard>
 
-        <div className="bg-white rounded-xl p-3 border border-gray-100">
+        <NeonCard>
           <div className="flex items-center justify-between mb-4">
             <div className="p-3 bg-accent/20 rounded-lg">
               <TrendingUp className="w-6 h-6 text-accent" />
@@ -67,9 +69,9 @@ export function Dashboard() {
             <span className="text-2xl font-bold text-dark">{getAvailabilityStats()}%</span>
           </div>
           <h3 className="text-sm font-medium text-gray-600">Disponibilité</h3>
-        </div>
+        </NeonCard>
 
-        <div className="bg-white rounded-xl p-3 border border-gray-100">
+        <NeonCard>
           <div className="flex items-center justify-between mb-4">
             <div className="p-3 bg-accent/20 rounded-lg">
               <Calendar className="w-6 h-6 text-accent" />
@@ -77,13 +79,13 @@ export function Dashboard() {
             <span className="text-2xl font-bold text-dark">{upcomingConcerts.length}</span>
           </div>
           <h3 className="text-sm font-medium text-gray-600">Prochains événements</h3>
-        </div>
+        </NeonCard>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Next Rehearsal */}
         {nextRehearsal && (
-          <div className="bg-white rounded-xl p-3 border border-gray-100">
+          <NeonCard>
             <h3 className="text-xl font-semibold text-dark mb-4 flex items-center">
               <Clock className="w-5 h-5 mr-2 text-primary" />
               Prochaine répétition
@@ -110,11 +112,11 @@ export function Dashboard() {
                 </div>
               </div>
             </div>
-          </div>
+          </NeonCard>
         )}
 
         {/* Upcoming Concerts */}
-        <div className="bg-white rounded-xl p-3 border border-gray-100">
+        <NeonCard>
           <h3 className="text-xl font-semibold text-dark mb-4 flex items-center">
             <Music className="w-5 h-5 mr-2 text-accent" />
             Prochains concerts
@@ -125,16 +127,22 @@ export function Dashboard() {
                 <div key={concert.id} className="border border-gray-200 rounded-lg p-3 transition-colors">
                   <div className="flex items-center justify-between mb-2">
                     <h4 className="font-semibold text-dark">{concert.title}</h4>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      concert.status === 'confirmed'
-                        ? 'bg-accent/20 text-accent'
+                    <NeonBadge
+                      className="ml-2"
+                      color={
+                        concert.status === 'confirmed'
+                          ? 'accent'
+                          : concert.status === 'pending'
+                          ? 'accent'
+                          : 'primary'
+                      }
+                    >
+                      {concert.status === 'confirmed'
+                        ? 'Confirmé'
                         : concert.status === 'pending'
-                        ? 'bg-accent/20 text-accent'
-                        : 'bg-primary/20 text-primary'
-                    }`}>
-                      {concert.status === 'confirmed' ? 'Confirmé' : 
-                       concert.status === 'pending' ? 'En attente' : 'Annulé'}
-                    </span>
+                        ? 'En attente'
+                        : 'Annulé'}
+                    </NeonBadge>
                   </div>
                   <div className="text-sm text-gray-600 space-y-1">
                     <div className="flex items-center">
@@ -154,7 +162,7 @@ export function Dashboard() {
               </p>
             )}
           </div>
-        </div>
+        </NeonCard>
       </div>
     </div>
   );

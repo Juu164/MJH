@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Calendar, MapPin, List as ListIcon, LayoutGrid } from 'lucide-react';
+import { NeonButton } from './NeonButton';
+import { NeonCard } from './NeonCard';
+import { NeonBadge } from './NeonBadge';
 import { useEvents, Event as EventType } from './useEvents';
 import { useNavigate, useParams } from 'react-router-dom';
 import { EventFormModal } from './EventFormModal';
@@ -31,21 +34,14 @@ export function EventsPage() {
   };
 
   const getTypeBadge = (type: EventType['type']) => {
-    const styles = {
-      gig: 'bg-primary/10 text-primary',
-      rehearsal: 'bg-accent/20 text-accent',
-    };
-
     const labels = {
       gig: 'Concert',
       rehearsal: 'Répétition',
     };
 
-    return (
-      <span className={`px-2 py-1 rounded-full text-xs font-medium ${styles[type]}`}>
-        {labels[type]}
-      </span>
-    );
+    const color = type === 'gig' ? 'primary' : 'accent';
+
+    return <NeonBadge color={color}>{labels[type]}</NeonBadge>;
   };
 
   const sortedEvents = [...events].sort((a, b) =>
@@ -76,16 +72,16 @@ export function EventsPage() {
           >
             <LayoutGrid className="w-5 h-5" />
           </button>
-          <button
+          <NeonButton
             onClick={() => {
               setEditingEvent(null);
               setShowModal(true);
             }}
-            className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary/90 transition-colors flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-accent"
+            className="flex items-center space-x-2"
           >
             <Plus className="w-5 h-5" />
             <span>Nouvel événement</span>
-          </button>
+          </NeonButton>
         </div>
       </div>
 
@@ -96,11 +92,7 @@ export function EventsPage() {
             const isPast = new Date(event.date) < new Date();
             return (
               <div style={style} className="p-2">
-                <div
-                  className={`bg-white rounded-xl p-3 border border-gray-100 hover:shadow-lg transition-shadow ${
-                    isPast ? 'opacity-75' : ''
-                  }`}
-                >
+                <NeonCard className={`${isPast ? 'opacity-75' : ''}`}>
                   <h3 className="text-lg font-semibold text-dark mb-2">{event.title}</h3>
                   <div className="flex items-center space-x-2 mb-4">{getTypeBadge(event.type)}</div>
                   <div className="space-y-3 text-sm text-gray-600">
@@ -119,7 +111,7 @@ export function EventsPage() {
                       {event.location}
                     </div>
                   </div>
-                </div>
+                </NeonCard>
               </div>
             );
           }}
@@ -129,7 +121,7 @@ export function EventsPage() {
           {sortedEvents.map(event => {
             const isPast = new Date(event.date) < new Date();
             return (
-              <div key={event.id} className={`concert-grid-card bg-white rounded-xl p-3 border border-gray-100 hover:shadow-lg transition-shadow ${isPast ? 'opacity-75' : ''}`}> 
+              <NeonCard key={event.id} className={`concert-grid-card ${isPast ? 'opacity-75' : ''}`}>
                 <h3 className="text-lg font-semibold text-dark mb-2">{event.title}</h3>
                 <div className="flex items-center space-x-2 mb-4">{getTypeBadge(event.type)}</div>
                 <div className="space-y-3 text-sm text-gray-600">
@@ -148,7 +140,7 @@ export function EventsPage() {
                     {event.location}
                   </div>
                 </div>
-              </div>
+              </NeonCard>
             );
           })}
         </div>

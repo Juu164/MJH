@@ -5,10 +5,18 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#0077B6',
-        accent: '#C04A00',
-        dark: '#2F2F2F',
+        primary: '#A855F7',
+        accent: '#06B6D4',
+        dark: '#0E0F13',
         success: '#22C55E',
+        light: '#E5E7EB',
+      },
+      fontFamily: {
+        heading: ['"Space Grotesk"', 'sans-serif'],
+        sans: ['Inter', 'sans-serif'],
+      },
+      boxShadow: {
+        neon: '0 0 15px rgba(168, 85, 247, 0.6)',
       },
     },
   },
