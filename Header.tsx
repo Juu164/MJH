@@ -3,6 +3,7 @@ import { Music, LogOut, Moon, Sun, Bell } from 'lucide-react';
 import { useApp } from './AppContext';
 import { useNotifications } from './useNotifications';
 import { NavMenu } from './NavMenu';
+import { ResourcesMenu } from './ResourcesMenu';
 import { Link } from 'react-router-dom';
 
 export function Header() {
@@ -51,28 +52,7 @@ export function Header() {
               >
                 Ressources &#9662;
               </button>
-              {showResources && (
-                <div className="absolute left-0 mt-2 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-2 space-y-1 z-30">
-                  <button
-                    className="block w-full text-left px-2 py-1 hover:bg-primary/5 rounded"
-                    onClick={() => {
-                      dispatch({ type: 'SET_TAB', payload: 'documents' });
-                      setShowResources(false);
-                    }}
-                  >
-                    Stockage de fichier
-                  </button>
-                  <button
-                    className="block w-full text-left px-2 py-1 hover:bg-primary/5 rounded"
-                    onClick={() => {
-                      dispatch({ type: 'SET_TAB', payload: 'ideas' });
-                      setShowResources(false);
-                    }}
-                  >
-                    Pense-Bête
-                  </button>
-                </div>
-              )}
+              <ResourcesMenu open={showResources} onClose={() => setShowResources(false)} />
             </div>
             <button
               onClick={() => dispatch({ type: 'SET_TAB', payload: 'concerts' })}
