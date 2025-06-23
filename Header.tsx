@@ -27,6 +27,74 @@ export function Header() {
           </button>
           <Music className="w-6 h-6 text-primary" />
           <span className="font-bold text-dark dark:text-gray-100">CalZik</span>
+          <nav className="hidden md:flex ml-6 space-x-4 font-semibold">
+            <button
+              onClick={() => dispatch({ type: 'SET_TAB', payload: 'dashboard' })}
+              className={`hover:text-primary ${state.currentTab === 'dashboard' ? 'text-primary' : ''}`}
+            >
+              Tableau de bord
+            </button>
+            <button
+              onClick={() => dispatch({ type: 'SET_TAB', payload: 'calendar' })}
+              className={`hover:text-primary ${state.currentTab === 'calendar' ? 'text-primary' : ''}`}
+            >
+              Calendrier
+            </button>
+            <div className="relative">
+              <button
+                onClick={() => setShowResources(s => !s)}
+                className={`hover:text-primary ${
+                  state.currentTab === 'documents' || state.currentTab === 'ideas'
+                    ? 'text-primary'
+                    : ''
+                }`}
+              >
+                Ressources &#9662;
+              </button>
+              {showResources && (
+                <div className="absolute left-0 mt-2 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-2 space-y-1 z-30">
+                  <button
+                    className="block w-full text-left px-2 py-1 hover:bg-primary/5 rounded"
+                    onClick={() => {
+                      dispatch({ type: 'SET_TAB', payload: 'documents' });
+                      setShowResources(false);
+                    }}
+                  >
+                    Stockage de fichier
+                  </button>
+                  <button
+                    className="block w-full text-left px-2 py-1 hover:bg-primary/5 rounded"
+                    onClick={() => {
+                      dispatch({ type: 'SET_TAB', payload: 'ideas' });
+                      setShowResources(false);
+                    }}
+                  >
+                    Pense-Bête
+                  </button>
+                </div>
+              )}
+            </div>
+            <button
+              onClick={() => dispatch({ type: 'SET_TAB', payload: 'concerts' })}
+              className={`hover:text-primary ${state.currentTab === 'concerts' ? 'text-primary' : ''}`}
+            >
+              Concerts
+            </button>
+            <button
+              onClick={() => dispatch({ type: 'SET_TAB', payload: 'contacts' })}
+              className={`hover:text-primary ${state.currentTab === 'contacts' ? 'text-primary' : ''}`}
+            >
+              Contacts
+            </button>
+            {state.currentUser?.role === 'leader' && (
+              <button
+                onClick={() => dispatch({ type: 'SET_TAB', payload: 'admin' })}
+                className={`hover:text-primary ${state.currentTab === 'admin' ? 'text-primary' : ''}`}
+              >
+                Administration
+              </button>
+            )}
+          </nav>
         </div>
         <div className="flex items-center space-x-2 relative">
           <Link
@@ -57,74 +125,6 @@ export function Header() {
           </button>
         </div>
       </div>
-      <nav className="hidden md:flex space-x-4 px-4 pb-2">
-        <button
-          onClick={() => dispatch({ type: 'SET_TAB', payload: 'dashboard' })}
-          className={`hover:text-primary ${state.currentTab === 'dashboard' ? 'text-primary font-semibold' : ''}`}
-        >
-          Tableau de bord
-        </button>
-        <button
-          onClick={() => dispatch({ type: 'SET_TAB', payload: 'calendar' })}
-          className={`hover:text-primary ${state.currentTab === 'calendar' ? 'text-primary font-semibold' : ''}`}
-        >
-          Calendrier
-        </button>
-        <div className="relative">
-          <button
-            onClick={() => setShowResources(s => !s)}
-            className={`hover:text-primary ${
-              state.currentTab === 'documents' || state.currentTab === 'ideas'
-                ? 'text-primary font-semibold'
-                : ''
-            }`}
-          >
-            Ressources &#9662;
-          </button>
-          {showResources && (
-            <div className="absolute left-0 mt-2 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-2 space-y-1 z-30">
-              <button
-                className="block w-full text-left px-2 py-1 hover:bg-primary/5 rounded"
-                onClick={() => {
-                  dispatch({ type: 'SET_TAB', payload: 'documents' });
-                  setShowResources(false);
-                }}
-              >
-                Stockage de fichier
-              </button>
-              <button
-                className="block w-full text-left px-2 py-1 hover:bg-primary/5 rounded"
-                onClick={() => {
-                  dispatch({ type: 'SET_TAB', payload: 'ideas' });
-                  setShowResources(false);
-                }}
-              >
-                Pense-Bête
-              </button>
-            </div>
-          )}
-        </div>
-        <button
-          onClick={() => dispatch({ type: 'SET_TAB', payload: 'concerts' })}
-          className={`hover:text-primary ${state.currentTab === 'concerts' ? 'text-primary font-semibold' : ''}`}
-        >
-          Concerts
-        </button>
-        <button
-          onClick={() => dispatch({ type: 'SET_TAB', payload: 'contacts' })}
-          className={`hover:text-primary ${state.currentTab === 'contacts' ? 'text-primary font-semibold' : ''}`}
-        >
-          Contacts
-        </button>
-        {state.currentUser?.role === 'leader' && (
-          <button
-            onClick={() => dispatch({ type: 'SET_TAB', payload: 'admin' })}
-            className={`hover:text-primary ${state.currentTab === 'admin' ? 'text-primary font-semibold' : ''}`}
-          >
-            Administration
-          </button>
-        )}
-      </nav>
       <NavMenu open={open} onClose={() => setOpen(false)} />
     </header>
   );
