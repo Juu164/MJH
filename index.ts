@@ -1,9 +1,11 @@
+import { Role } from './roles';
+
 export interface User {
   id: string;
   email: string;
   name: string;
   instrument: string;
-  role: 'admin' | 'member';
+  role: Role;
   isActive: boolean;
 }
 

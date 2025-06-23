@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Users, UserPlus, Edit, Shield, ShieldCheck, Music, Mail, ToggleLeft as Toggle, Save, X } from 'lucide-react';
 import { useApp } from './AppContext';
 import { User } from '../types';
+import { Role } from './roles';
 
 export function AdminPanel() {
   const { state, dispatch } = useApp();
@@ -70,7 +71,7 @@ export function AdminPanel() {
   };
 
   const handleToggleRole = (user: User) => {
-    const newRole = user.role === 'admin' ? 'member' : 'admin';
+    const newRole = user.role === Role.Leader ? Role.Member : Role.Leader;
     dispatch({
       type: 'UPDATE_USER',
       payload: { ...user, role: newRole }
@@ -79,7 +80,7 @@ export function AdminPanel() {
 
   const getStats = () => {
     const activeUsers = users.filter(u => u.isActive).length;
-    const adminUsers = users.filter(u => u.role === 'admin').length;
+    const adminUsers = users.filter(u => u.role === Role.Leader).length;
     const upcomingConcerts = concerts.filter(c => new Date(c.date) >= new Date()).length;
     const totalAvailabilities = availabilities.length;
 
@@ -108,7 +109,7 @@ export function AdminPanel() {
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
+        <div className="bg-white rounded-xl p-3 border border-gray-100">
           <div className="flex items-center justify-between mb-4">
             <div className="p-3 bg-primary/10 rounded-lg">
               <Users className="w-6 h-6 text-primary" />
@@ -118,17 +119,17 @@ export function AdminPanel() {
           <h3 className="text-sm font-medium text-gray-600">Utilisateurs actifs</h3>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
+        <div className="bg-white rounded-xl p-3 border border-gray-100">
           <div className="flex items-center justify-between mb-4">
             <div className="p-3 bg-accent/20 rounded-lg">
               <ShieldCheck className="w-6 h-6 text-accent" />
             </div>
             <span className="text-2xl font-bold text-dark">{stats.adminUsers}</span>
           </div>
-          <h3 className="text-sm font-medium text-gray-600">Administrateurs</h3>
+          <h3 className="text-sm font-medium text-gray-600">Leaders</h3>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
+        <div className="bg-white rounded-xl p-3 border border-gray-100">
           <div className="flex items-center justify-between mb-4">
             <div className="p-3 bg-accent/20 rounded-lg">
               <Music className="w-6 h-6 text-accent" />
@@ -138,7 +139,7 @@ export function AdminPanel() {
           <h3 className="text-sm font-medium text-gray-600">Prochains concerts</h3>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
+        <div className="bg-white rounded-xl p-3 border border-gray-100">
           <div className="flex items-center justify-between mb-4">
             <div className="p-3 bg-accent/20 rounded-lg">
               <Toggle className="w-6 h-6 text-accent" />
@@ -150,7 +151,7 @@ export function AdminPanel() {
       </div>
 
       {/* Users Management */}
-      <div className="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
         <div className="p-6 border-b border-gray-200">
           <h2 className="text-xl font-semibold text-dark flex items-center">
             <Users className="w-6 h-6 mr-2 text-primary" />
@@ -212,17 +213,17 @@ export function AdminPanel() {
                     <button
                       onClick={() => handleToggleRole(user)}
                       className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors ${
-                        user.role === 'admin'
+                        user.role === Role.Leader
                           ? 'bg-accent/20 text-accent hover:bg-accent/30'
                           : 'bg-gray-100 text-dark hover:bg-gray-200'
                       }`}
                     >
-                      {user.role === 'admin' ? (
+                      {user.role === Role.Leader ? (
                         <Shield className="w-3 h-3 mr-1" />
                       ) : (
                         <Users className="w-3 h-3 mr-1" />
                       )}
-                      {user.role === 'admin' ? 'Admin' : 'Membre'}
+                      {user.role === Role.Leader ? 'Leader' : 'Membre'}
                     </button>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -258,7 +259,7 @@ export function AdminPanel() {
       {/* User Modal */}
       {showUserModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-xl p-3 w-full max-w-md max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-dark">
                 {editingUser ? 'Modifier l\'utilisateur' : 'Nouvel utilisateur'}
@@ -327,7 +328,7 @@ export function AdminPanel() {
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-accent focus:border-transparent"
                 >
                   <option value="member">Membre</option>
-                  <option value="admin">Administrateur</option>
+                  <option value="leader">Leader</option>
                 </select>
               </div>
 

@@ -10,7 +10,7 @@ interface InfoModalProps {
 export function InfoModal({ value, onChange, onClose }: InfoModalProps) {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-xl p-6 w-full max-w-2xl">
+      <div className="bg-white rounded-xl p-3 w-full max-w-2xl">
         <InfoEditor value={value} onChange={onChange} />
         <div className="mt-4 text-right">
           <button

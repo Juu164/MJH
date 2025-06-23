@@ -4,7 +4,9 @@ import { EventsProvider } from './useEvents';
 import { InvoicesProvider } from './useInvoices';
 import { NotificationsProvider, NotificationList } from './useNotifications';
 import { LoginForm } from './LoginForm';
-import { NavMenu } from './NavMenu';
+import { Header } from './Header';
+import { Role } from './roles';
+import { NotificationsPage } from './Notifications';
 import { Dashboard } from './Dashboard';
 import { AvailabilityCalendar } from './AvailabilityCalendar';
 import { Routes, Route } from 'react-router-dom';
@@ -51,7 +53,7 @@ function AppContent() {
       case 'documents':
         return <DocumentsPage />;
       case 'admin':
-        return currentUser.role === 'admin' ? <AdminPanel /> : <Dashboard />;
+        return currentUser.role === Role.Leader ? <AdminPanel /> : <Dashboard />;
       case 'invoice':
         return <InvoicePage />;
       default:
@@ -61,7 +63,7 @@ function AppContent() {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-gray-900 dark:text-gray-100">
-      <NavMenu />
+      <Header />
       <main className="pb-20 md:pb-0">
         <React.Suspense fallback={<div className="p-4">Chargement...</div>}>
           {renderCurrentTab()}
@@ -80,6 +82,7 @@ function App() {
           <AppProvider>
             <Routes>
               <Route path="/concerts/:eventId" element={<AppContent />} />
+              <Route path="/notifications" element={<NotificationsPage />} />
               <Route path="*" element={<AppContent />} />
             </Routes>
             <NotificationList />

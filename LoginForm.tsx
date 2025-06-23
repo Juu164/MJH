@@ -87,7 +87,7 @@ export function LoginForm() {
             Comptes de démonstration :
           </p>
           <div className="mt-2 space-y-1 text-xs text-gray-500">
-            <p>Admin: admin@calzik.fr</p>
+            <p>Leader: admin@calzik.fr</p>
             <p>Membre: pierre@calzik.fr</p>
           </div>
         </div>

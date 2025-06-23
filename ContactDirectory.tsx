@@ -126,7 +126,7 @@ export function ContactDirectory() {
       </div>
 
       {/* Search and Filters */}
-      <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100 mb-6">
+      <div className="bg-white rounded-xl p-3 border border-gray-100 mb-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="md:col-span-2">
             <div className="relative">
@@ -178,7 +178,7 @@ export function ContactDirectory() {
         {filteredContacts.map((contact) => (
           <div
             key={contact.id}
-            className="bg-white rounded-xl p-6 shadow-md border border-gray-100 hover:shadow-lg transition-shadow"
+            className="bg-white rounded-xl p-3 border border-gray-100 hover:shadow-lg transition-shadow"
           >
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
@@ -258,7 +258,7 @@ export function ContactDirectory() {
       {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-xl p-3 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <h2 className="text-2xl font-bold text-dark mb-6">
               {editingContact ? 'Modifier le contact' : 'Nouveau contact'}
             </h2>
