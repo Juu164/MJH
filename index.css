@@ -21,3 +21,8 @@
     width: 210mm;
   }
 }
+
+.concert-grid-card {
+  width: 300px;
+  height: 200px;
+}

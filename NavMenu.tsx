@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useApp } from './AppContext';
+import { useOutsideClick } from './useOutsideClick';
 
 interface Props {
   open: boolean;
@@ -9,6 +10,8 @@ interface Props {
 export function NavMenu({ open, onClose }: Props) {
   const { state, dispatch } = useApp();
   const { currentTab, currentUser } = state;
+  const ref = useRef<HTMLDivElement>(null);
+  useOutsideClick(ref, onClose);
 
   const menuItems = [
     { id: 'dashboard' as const, label: 'Tableau de bord' },
@@ -28,7 +31,10 @@ export function NavMenu({ open, onClose }: Props) {
   if (!open) return null;
 
   return (
-    <div className="absolute left-0 mt-2 w-60 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-2 space-y-2 z-30" onClick={onClose}>
+    <div
+      ref={ref}
+      className="absolute left-0 mt-2 w-60 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-2 space-y-2 z-30"
+    >
       {menuItems.map(item => (
         <button
           key={item.id}
