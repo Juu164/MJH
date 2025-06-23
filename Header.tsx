@@ -10,51 +10,37 @@ export function Header() {
   const { isDarkMode } = state;
   const { notifications } = useNotifications();
   const [open, setOpen] = useState(false);
-  const [showNotif, setShowNotif] = useState(false);
+  const [showResources, setShowResources] = useState(false);
 
   const handleLogout = () => dispatch({ type: 'LOGOUT' });
 
   return (
-    <header className="bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 sticky top-0 z-20">
+    <header className="bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 sticky top-0 z-20 relative">
       <div className="flex items-center justify-between p-4">
         <div className="flex items-center space-x-2">
-          <Music className="w-6 h-6 text-primary" />
-          <span className="font-bold text-dark dark:text-gray-100">CalZik</span>
           <button
-            onClick={() => setOpen(true)}
-            className="ml-2 p-2 text-gray-600 hover:text-primary focus:outline-none focus:ring-2 focus:ring-accent dark:text-gray-400"
+            onClick={() => setOpen(o => !o)}
+            className="p-2 text-gray-600 hover:text-primary focus:outline-none focus:ring-2 focus:ring-accent dark:text-gray-400"
             aria-label="Menu"
           >
             &#9776;
           </button>
+          <Music className="w-6 h-6 text-primary" />
+          <span className="font-bold text-dark dark:text-gray-100">CalZik</span>
         </div>
         <div className="flex items-center space-x-2 relative">
-          <div className="relative">
-            <button
-              onClick={() => setShowNotif(s => !s)}
-              className="p-2 text-gray-600 hover:text-primary focus:outline-none focus:ring-2 focus:ring-accent dark:text-gray-400"
-              aria-label="Notifications"
-            >
-              <Bell className="w-5 h-5" />
-              {notifications.length > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-600 text-white rounded-full text-xs w-4 h-4 flex items-center justify-center">
-                  {notifications.length}
-                </span>
-              )}
-            </button>
-            {showNotif && (
-              <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-2 space-y-2 text-sm z-20">
-                {notifications.slice(-3).reverse().map(n => (
-                  <div key={n.id} className="border-b last:border-b-0 border-gray-200 dark:border-gray-700 pb-1">
-                    <div>{n.message}</div>
-                    <div className="text-xs text-gray-500">{new Date(n.date).toLocaleDateString()}</div>
-                  </div>
-                ))}
-                {!notifications.length && <div>Aucune notification</div>}
-                <Link to="/notifications" className="block text-primary text-right text-xs mt-1">Voir toutes</Link>
-              </div>
+          <Link
+            to="/notifications"
+            className="relative p-2 text-gray-600 hover:text-primary focus:outline-none focus:ring-2 focus:ring-accent dark:text-gray-400"
+            aria-label="Notifications"
+          >
+            <Bell className="w-5 h-5" />
+            {notifications.filter(n => !n.read).length > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-600 text-white rounded-full text-xs w-4 h-4 flex items-center justify-center">
+                {notifications.filter(n => !n.read).length}
+              </span>
             )}
-          </div>
+          </Link>
           <button
             onClick={() => dispatch({ type: 'TOGGLE_DARK_MODE' })}
             className="p-2 text-gray-600 hover:text-primary focus:outline-none focus:ring-2 focus:ring-accent dark:text-gray-400"
@@ -71,6 +57,74 @@ export function Header() {
           </button>
         </div>
       </div>
+      <nav className="hidden md:flex space-x-4 px-4 pb-2">
+        <button
+          onClick={() => dispatch({ type: 'SET_TAB', payload: 'dashboard' })}
+          className={`hover:text-primary ${state.currentTab === 'dashboard' ? 'text-primary font-semibold' : ''}`}
+        >
+          Tableau de bord
+        </button>
+        <button
+          onClick={() => dispatch({ type: 'SET_TAB', payload: 'calendar' })}
+          className={`hover:text-primary ${state.currentTab === 'calendar' ? 'text-primary font-semibold' : ''}`}
+        >
+          Calendrier
+        </button>
+        <div className="relative">
+          <button
+            onClick={() => setShowResources(s => !s)}
+            className={`hover:text-primary ${
+              state.currentTab === 'documents' || state.currentTab === 'ideas'
+                ? 'text-primary font-semibold'
+                : ''
+            }`}
+          >
+            Ressources &#9662;
+          </button>
+          {showResources && (
+            <div className="absolute left-0 mt-2 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-2 space-y-1 z-30">
+              <button
+                className="block w-full text-left px-2 py-1 hover:bg-primary/5 rounded"
+                onClick={() => {
+                  dispatch({ type: 'SET_TAB', payload: 'documents' });
+                  setShowResources(false);
+                }}
+              >
+                Stockage de fichier
+              </button>
+              <button
+                className="block w-full text-left px-2 py-1 hover:bg-primary/5 rounded"
+                onClick={() => {
+                  dispatch({ type: 'SET_TAB', payload: 'ideas' });
+                  setShowResources(false);
+                }}
+              >
+                Pense-Bête
+              </button>
+            </div>
+          )}
+        </div>
+        <button
+          onClick={() => dispatch({ type: 'SET_TAB', payload: 'concerts' })}
+          className={`hover:text-primary ${state.currentTab === 'concerts' ? 'text-primary font-semibold' : ''}`}
+        >
+          Concerts
+        </button>
+        <button
+          onClick={() => dispatch({ type: 'SET_TAB', payload: 'contacts' })}
+          className={`hover:text-primary ${state.currentTab === 'contacts' ? 'text-primary font-semibold' : ''}`}
+        >
+          Contacts
+        </button>
+        {state.currentUser?.role === 'leader' && (
+          <button
+            onClick={() => dispatch({ type: 'SET_TAB', payload: 'admin' })}
+            className={`hover:text-primary ${state.currentTab === 'admin' ? 'text-primary font-semibold' : ''}`}
+          >
+            Administration
+          </button>
+        )}
+      </nav>
       <NavMenu open={open} onClose={() => setOpen(false)} />
     </header>
   );

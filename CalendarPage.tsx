@@ -1,18 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
-import { EventApi } from '@fullcalendar/core';
 import { useEvents, Event } from './useEvents';
-import { useApp } from './AppContext';
-import { useNavigate } from 'react-router-dom';
 import { EventFormModal } from './EventFormModal';
 import { AddEventModal } from './AddEventModal';
 import { AgendaView } from './AgendaView';
 import { EventModal } from './EventModal';
 
 export function CalendarPage() {
-  const { dispatch } = useApp();
-  const navigate = useNavigate();
   const { events } = useEvents();
   const [selected, setSelected] = useState<Event | null>(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 600);

@@ -10,49 +10,39 @@ export function NavMenu({ open, onClose }: Props) {
   const { state, dispatch } = useApp();
   const { currentTab, currentUser } = state;
 
-  const items = [
-    { id: 'dashboard' as const, label: 'Tableau de bord' },
-    { id: 'availability' as const, label: 'Disponibilités' },
-    { id: 'calendar' as const, label: 'Calendrier' },
-    { id: 'concerts' as const, label: 'Concerts' },
-    { id: 'ideas' as const, label: 'Pense-Bête' },
-    { id: 'documents' as const, label: 'Documents' },
-    ...(currentUser?.role === 'leader'
-      ? [{ id: 'admin' as const, label: 'Administration' }]
-      : []),
-  ];
-
   const menuItems = [
-    ...items,
+    { id: 'dashboard' as const, label: 'Tableau de bord' },
+    { id: 'calendar' as const, label: 'Calendrier' },
+    { id: 'documents' as const, label: 'Stockage de fichier' },
+    { id: 'ideas' as const, label: 'Pense-Bête' },
+    { id: 'concerts' as const, label: 'Concerts' },
+    { id: 'contacts' as const, label: 'Contacts' },
     ...(currentUser?.role === 'leader'
-      ? [{ id: 'invoice' as const, label: 'Factures' }]
+      ? [
+          { id: 'admin' as const, label: 'Administration' },
+          { id: 'invoice' as const, label: 'Factures' },
+        ]
       : []),
   ];
 
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-30 flex" onClick={onClose}>
-      <div className="bg-black/50 flex-1" />
-      <div
-        className="bg-white dark:bg-gray-800 w-64 p-4 space-y-2"
-        onClick={e => e.stopPropagation()}
-      >
-        {menuItems.map(item => (
-          <button
-            key={item.id}
-            onClick={() => {
-              dispatch({ type: 'SET_TAB', payload: item.id });
-              onClose();
-            }}
-            className={`block w-full text-left px-3 py-2 rounded-lg hover:bg-primary/5 ${
-              currentTab === item.id ? 'bg-[#E0F2FF] text-[#0369A1]' : ''
-            }`}
-          >
-            {item.label}
-          </button>
-        ))}
-      </div>
+    <div className="absolute left-0 mt-2 w-60 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-2 space-y-2 z-30" onClick={onClose}>
+      {menuItems.map(item => (
+        <button
+          key={item.id}
+          onClick={() => {
+            dispatch({ type: 'SET_TAB', payload: item.id });
+            onClose();
+          }}
+          className={`block w-full text-left px-3 py-2 rounded-lg hover:bg-primary/5 ${
+            currentTab === item.id ? 'bg-[#E0F2FF] text-[#0369A1]' : ''
+          }`}
+        >
+          {item.label}
+        </button>
+      ))}
     </div>
   );
 }

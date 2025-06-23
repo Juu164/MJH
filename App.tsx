@@ -6,7 +6,7 @@ import { NotificationsProvider, NotificationList } from './useNotifications';
 import { LoginForm } from './LoginForm';
 import { Header } from './Header';
 import { Role } from './roles';
-import { NotificationsPage } from './Notifications';
+import { NotificationsPage } from './NotificationsPage';
 import { Dashboard } from './Dashboard';
 import { AvailabilityCalendar } from './AvailabilityCalendar';
 import { Routes, Route } from 'react-router-dom';

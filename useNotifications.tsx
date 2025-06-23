@@ -4,12 +4,14 @@ export interface Notification {
   id: string;
   message: string;
   date: string;
+  read?: boolean;
 }
 
 interface NotificationsCtx {
   notifications: Notification[];
   add: (notification: Notification) => void;
   remove: (id: string) => void;
+  markAllRead: () => void;
 }
 
 const NotificationsContext = createContext<NotificationsCtx | undefined>(undefined);
@@ -19,11 +21,12 @@ export function NotificationsProvider({ children }: { children: ReactNode }) {
     const stored = localStorage.getItem('notifications');
     if (!stored) return [];
     try {
-      const data = JSON.parse(stored);
-      return data.map((n: any) => ({
+      const data = JSON.parse(stored) as Array<Partial<Notification>>;
+      return data.map(n => ({
         id: n.id,
         message: n.message,
         date: n.date || new Date().toISOString(),
+        read: n.read || false,
       }));
     } catch {
       return [];
@@ -37,7 +40,7 @@ export function NotificationsProvider({ children }: { children: ReactNode }) {
   const add = (notification: Notification) => {
     setNotifications(prev => {
       if (prev.some(n => n.id === notification.id)) return prev;
-      return [...prev, notification];
+      return [...prev, { ...notification, read: false }];
     });
   };
 
@@ -45,8 +48,12 @@ export function NotificationsProvider({ children }: { children: ReactNode }) {
     setNotifications(prev => prev.filter(n => n.id !== id));
   };
 
+  const markAllRead = () => {
+    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+  };
+
   return (
-    <NotificationsContext.Provider value={{ notifications, add, remove }}>
+    <NotificationsContext.Provider value={{ notifications, add, remove, markAllRead }}>
       {children}
     </NotificationsContext.Provider>
   );
