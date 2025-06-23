@@ -5,6 +5,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { EventFormModal } from './EventFormModal';
 import { FixedSizeList as List } from 'react-window';
 import { useDisplayMode } from './useDisplayMode';
+import { NeonCard } from './src/components/NeonCard';
+import { NeonButton } from './src/components/NeonButton';
 
 export function EventsPage() {
   const { events } = useEvents();
@@ -65,27 +67,27 @@ export function EventsPage() {
           <button
             onClick={() => setMode('list')}
             aria-label="Vue liste"
-            className={`p-2 border rounded-lg ${mode === 'list' ? 'bg-primary text-white' : 'bg-white'}`}
+            className={`p-2 border rounded-lg ${mode === 'list' ? 'bg-primary text-white shadow-cyan-500/50' : 'bg-white'}`}
           >
             <ListIcon className="w-5 h-5" />
           </button>
           <button
             onClick={() => setMode('grid')}
             aria-label="Vue grille"
-            className={`p-2 border rounded-lg ${mode === 'grid' ? 'bg-primary text-white' : 'bg-white'}`}
+            className={`p-2 border rounded-lg ${mode === 'grid' ? 'bg-primary text-white shadow-cyan-500/50' : 'bg-white'}`}
           >
             <LayoutGrid className="w-5 h-5" />
           </button>
-          <button
+          <NeonButton
             onClick={() => {
               setEditingEvent(null);
               setShowModal(true);
             }}
-            className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary/90 transition-colors flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-accent"
+            className="flex items-center space-x-2"
           >
             <Plus className="w-5 h-5" />
             <span>Nouvel événement</span>
-          </button>
+          </NeonButton>
         </div>
       </div>
 
@@ -96,10 +98,8 @@ export function EventsPage() {
             const isPast = new Date(event.date) < new Date();
             return (
               <div style={style} className="p-2">
-                <div
-                  className={`bg-white rounded-xl p-3 border border-gray-100 hover:shadow-lg transition-shadow ${
-                    isPast ? 'opacity-75' : ''
-                  }`}
+                <NeonCard
+                  className={`${isPast ? 'opacity-75' : ''} p-3`}
                 >
                   <h3 className="text-lg font-semibold text-dark mb-2">{event.title}</h3>
                   <div className="flex items-center space-x-2 mb-4">{getTypeBadge(event.type)}</div>
@@ -119,7 +119,7 @@ export function EventsPage() {
                       {event.location}
                     </div>
                   </div>
-                </div>
+                </NeonCard>
               </div>
             );
           }}
@@ -129,7 +129,7 @@ export function EventsPage() {
           {sortedEvents.map(event => {
             const isPast = new Date(event.date) < new Date();
             return (
-              <div key={event.id} className={`concert-grid-card bg-white rounded-xl p-3 border border-gray-100 hover:shadow-lg transition-shadow ${isPast ? 'opacity-75' : ''}`}> 
+              <NeonCard key={event.id} className={`concert-grid-card p-3 ${isPast ? 'opacity-75' : ''}` }>
                 <h3 className="text-lg font-semibold text-dark mb-2">{event.title}</h3>
                 <div className="flex items-center space-x-2 mb-4">{getTypeBadge(event.type)}</div>
                 <div className="space-y-3 text-sm text-gray-600">
@@ -148,7 +148,7 @@ export function EventsPage() {
                     {event.location}
                   </div>
                 </div>
-              </div>
+              </NeonCard>
             );
           })}
         </div>
