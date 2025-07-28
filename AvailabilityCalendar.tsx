@@ -190,7 +190,6 @@ export function AvailabilityCalendar() {
                       <td className="px-4 py-3">
                         <div className="text-sm font-medium text-dark">
                           {dateObj.toLocaleDateString('fr-FR', {
-                            weekday: 'short',
                             month: 'short',
                             day: 'numeric'
                           })}
